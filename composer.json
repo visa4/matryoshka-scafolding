@@ -1,0 +1,12 @@
+{
+    "name": "visa4/matryoshka-scafolding",
+    "license": "proprietary",
+    "homepage": "https://github.com/visa4/matryoshka-scafolding",
+    "require": {
+        "php": ">=5.4.0",
+        "zendframework/zendframework": "dev-master"
+    },
+    "require-dev": {
+        "zendframework/zftool": "dev-master"
+    }
+}
