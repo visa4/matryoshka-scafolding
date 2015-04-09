@@ -4,7 +4,7 @@
     "homepage": "https://github.com/visa4/matryoshka-scafolding",
     "require": {
         "php": ">=5.4.0",
-        "zendframework/zendframework": "dev-master"
+        "zendframework/zendframework": "~2.3"
     },
     "require-dev": {
         "zendframework/zftool": "dev-master"
