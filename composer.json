@@ -10,6 +10,6 @@
         "zendframework/zftool": "dev-master"
     },
     "bin": [
-       "bin/console.php"
+       "bin/mtk_console.php"
     ]
 }
