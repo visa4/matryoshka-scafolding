@@ -8,5 +8,8 @@
     },
     "require-dev": {
         "zendframework/zftool": "dev-master"
-    }
+    },
+    "bin": [
+       "bin/console.php"
+    ]
 }
