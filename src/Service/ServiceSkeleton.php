@@ -6,7 +6,7 @@ use Zend\Filter\UpperCaseWords;
 /**
  * Class GenerateSkeleton
  */
-class GenerateSkeleton
+class ServiceSkeleton
 {
     const PREFIX_NAME_PATH = 'Matryoshka%sModule';
 
@@ -15,20 +15,14 @@ class GenerateSkeleton
      */
     protected $wrapperNameModule;
 
-
-    public function generate($name, $path = '.')
-    {
-        $nameSpace = $this->generateNameSpaceModule($name);
-    }
-
     /**
      * @param $name
      * @return string
      */
-    public function generateNameSpaceModule($name)
+    public function generateName($nameModule)
     {
         $filter = new UpperCaseWords(); // TODO change with Ucfirst filter
-        $filterName =  $filter->filter($name);
+        $filterName =  $filter->filter($nameModule);
         return sprintf($this->getWrapperNameModule(), $filterName);
     }
 

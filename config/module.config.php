@@ -1,5 +1,10 @@
 <?php
 $config = [
+    'service_manager' => [
+        'invokables' => [
+            'Matryoshka\Scafolding\Service\ServiceSkeleton' => 'Matryoshka\Scafolding\Service\ServiceSkeleton',
+        ],
+    ],
     'controllers' => [
         'invokables' => [
             'Matryoshka\Scafolding\Console\Model' => 'Matryoshka\Scafolding\Console\ModelController',

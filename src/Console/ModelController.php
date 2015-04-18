@@ -1,11 +1,8 @@
 <?php
 namespace Matryoshka\Scafolding\Console;
 
-use Matryoshka\Scafolding\Service\GenerateSkeleton;
-use Zend\Code\Generator\ClassGenerator;
-use Zend\Code\Generator\FileGenerator;
 use Zend\Console\ColorInterface;
-use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
  * Class ModelController
@@ -18,33 +15,49 @@ class ModelController extends AbstractConsoleController
         // To output detail to console
         $verbose = $request->getParam('verbose') || $request->getParam('v');
         $name = $request->getParam('name');
-        $rootPath = $request->getParam('path', '.');
-
+        $path = $request->getParam('path', '.');
 
         if ($verbose) {
             $this->console->write('Create skeleton', ColorInterface::GREEN);
             $this->console->writeLine('', ColorInterface::RESET);
         }
 
-        $generateSkeleton = new GenerateSkeleton();
-        $generateSkeleton->generate($name, $rootPath);
+        $generateSkeleton = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\ServiceSkeleton');
+        $generatedName = $generateSkeleton->generateName($name);
 
+        if (!file_exists("$path/module") || !file_exists("$path/config/application.config.php")) {
+            $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
+            return 0;
+        }
 
-        /*
-        $dataPath = realpath(__DIR__ . '/../../data');
-        $arrayConfig = include realpath(__DIR__ . '/../../config/user.php');  // TODO recuperare da fuori
-        var_dump($arrayConfig);
+        try{
+            $moduleExist = $this->moduleExist($generatedName);
+        } catch(\Exception $e) {
+            $this->errorMessage($e->getMessage());
+            return 0;
+        }
 
-        $entityConfig = $arrayConfig['entity'];
-        $obj = new ClassGenerator(ucfirst($arrayConfig['name']) . 'Entity');
-        $file = new FileGenerator();
-
-        $file->setClass($obj);
-
-        file_put_contents($dataPath . '/UserEntity.php' , $file->generate());
-        */
+        if ($moduleExist) {
+            $this->errorMessage(sprintf('Module %s already exist', $name));
+            return 0;
+        }
 
     }
 
+    protected function moduleExist($name)
+    {
+        $sm = $this->getServiceLocator();
+        try{
+            /* @var $mm \Zend\ModuleManager\ModuleManager */
+            $mm = $sm->get('modulemanager');
+        } catch(ServiceNotFoundException $e) {
+            throw new \RuntimeException('Cannot get Zend\ModuleManager\ModuleManager instance');
+        }
 
-} 
+        $moduleName = $mm->getModule($name);
+        if ($moduleName) {
+            return true;
+        }
+        return false;
+    }
+}
