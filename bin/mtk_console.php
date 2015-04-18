@@ -1,5 +1,6 @@
 <?php
 use Zend\Mvc\Application;
+use Zend\Stdlib\ArrayUtils;
 
 ini_set('display_errors', true);
 
@@ -29,6 +30,11 @@ switch (true) {
         $config = include_once 'config/console.config.php';
         break;
 }
+if (isset($config['modules']) && !isset($config['modules']['Matryoshka\Scafolding'])) {
+    $moduleConfig = include_once 'config/console.config.php';
+    $config = ArrayUtils::merge($config, $moduleConfig);
+}
+
 
 // Run the application!
 Application::init($config)->run();
