@@ -14,13 +14,11 @@ class ModelController extends AbstractConsoleController
 {
     public function createModuleAction()
     {
-
-
         $request = $this->getRequest();
         // To output detail to console
         $verbose = $request->getParam('verbose') || $request->getParam('v');
         $name = $request->getParam('name');
-        $rootPath = $request->getParam('rootPath');
+        $rootPath = $request->getParam('path', '.');
 
 
         if ($verbose) {
@@ -30,6 +28,7 @@ class ModelController extends AbstractConsoleController
 
         $generateSkeleton = new GenerateSkeleton();
         $generateSkeleton->generate($name, $rootPath);
+
 
         /*
         $dataPath = realpath(__DIR__ . '/../../data');
