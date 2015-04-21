@@ -7,7 +7,7 @@ $config = [
     ],
     'controllers' => [
         'invokables' => [
-            'Matryoshka\Scafolding\Console\Model' => 'Matryoshka\Scafolding\Console\ModelController',
+            'Matryoshka\Scafolding\Console\Module' => 'Matryoshka\Scafolding\Console\ModuleController',
         ],
     ],
 ];

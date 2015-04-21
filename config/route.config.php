@@ -8,7 +8,7 @@ return  [
                     'options' => [
                         'route'     => 'create module [--verbose|-v] <name> [<path>]',
                         'defaults'  => [
-                            'controller'    => 'Matryoshka\Scafolding\Console\Model',
+                            'controller'    => 'Matryoshka\Scafolding\Console\Module',
                             'action'        => 'create-module',
                         ]
                     ]
