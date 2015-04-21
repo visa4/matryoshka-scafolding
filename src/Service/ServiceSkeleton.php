@@ -29,10 +29,19 @@ class ServiceSkeleton implements SkeletonInterface
     /**
      * @inheritdoc
      */
-    public function getViewFolder($nameModule)
+    public function generateConfigFolder($nameModule, $path)
+    {
+        return mkdir($path . "/module/" . $nameModule . "/config", 0777, true);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function generateViewFolder($nameModule, $path)
     {
         $filter = new CamelCaseToDash();
-        return strtolower($filter->filter($nameModule));
+        $viewFolder = strtolower($filter->filter($nameModule));
+        return mkdir($path . "/module/" . $nameModule . "/view/" . $viewFolder, 0777, true);
     }
 
     /**

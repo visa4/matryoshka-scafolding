@@ -19,14 +19,12 @@ class ModuleController extends AbstractConsoleController
         $path = $request->getParam('path', '.');
 
         if ($verbose) {
-            $this->console->write('Create skeleton', ColorInterface::GREEN);
-            $this->console->writeLine('', ColorInterface::RESET);
+            $this->infoMessage('Start create skeleton');
         }
 
         /* @var $serviceSkeleton SkeletonInterface */
         $serviceSkeleton = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\ServiceSkeleton');
         $moduleName = $serviceSkeleton->generateName($name);
-        $viewFolder = $serviceSkeleton->getViewFolder($moduleName);
 
         if (!file_exists("$path/module") || !file_exists("$path/config/application.config.php")) {
             $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
@@ -45,12 +43,16 @@ class ModuleController extends AbstractConsoleController
             return 0;
         }
 
+        $isFoldersSkeletonCreated = $serviceSkeleton->generateConfigFolder($moduleName, $path) &&
+            $serviceSkeleton->generateViewFolder($moduleName, $path);
 
-        mkdir("$path/module/$moduleName/config", 0777, true);
-        mkdir("$path/module/$moduleName/src/Controller", 0777, true);
-        mkdir("$path/module/$moduleName/view/$viewFolder", 0777, true);
-
-
+        if ($isFoldersSkeletonCreated) {
+            if ($verbose) {
+                $this->infoMessage('Folders created');
+            }
+        } else {
+            // TODO remove folder
+        }
     }
 
     protected function moduleExist($name)

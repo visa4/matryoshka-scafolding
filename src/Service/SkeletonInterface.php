@@ -17,8 +17,16 @@ interface SkeletonInterface
     public function generateName($nameModule);
 
     /**
-     * @param string $nameModule
-     * @return string
+     * @param $nameModule
+     * @param $path
+     * @return bool
      */
-    public function getViewFolder($nameModule);
+    public function generateConfigFolder($nameModule, $path);
+
+    /**
+     * @param $nameModule
+     * @param $path
+     * @return bool
+     */
+    public function generateViewFolder($nameModule, $path);
 } 
