@@ -66,7 +66,7 @@ class Skeleton implements SkeletonInterface
         $file = new FileGenerator();
         $file->setClass($class);
 
-        return file_put_contents($path . "/Module.php", $class->generate());
+        return file_put_contents($path . "/module/" . $this->getModuleName() . "/Module.php", $file->generate());
     }
 
     /**
