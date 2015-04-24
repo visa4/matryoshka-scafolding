@@ -61,13 +61,14 @@ class Skeleton implements SkeletonInterface
 
         $getAutoloaderConfigMethod = new MethodGenerator();
         $getAutoloaderConfigMethod->setName('getAutoloaderConfig');
-        $getAutoloaderConfigMethod->setBody("return [
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ],
-            ],
-        );");
+        $getAutoloaderConfigMethod->setBody("return ['Zend\Loader\StandardAutoloader' => [
+    'namespaces' => [
+        __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+        ],
+    ],
+];"
+        );
+
 
         $class->addMethods([$getConfigMethod, $getAutoloaderConfigMethod]);
 
