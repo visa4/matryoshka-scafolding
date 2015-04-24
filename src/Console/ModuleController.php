@@ -43,8 +43,8 @@ class ModuleController extends AbstractConsoleController
             return 0;
         }
 
-        $isFoldersSkeletonCreated = $skeleton->generateConfigFolder($moduleName, $path) &&
-            $skeleton->generateSrcFolder($moduleName, $path)
+        $isFoldersSkeletonCreated = $skeleton->generateConfigFolder($path) &&
+            $skeleton->generateSrcFolder($path)
         ;
 
         if (!$isFoldersSkeletonCreated) {
