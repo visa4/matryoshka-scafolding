@@ -3,6 +3,7 @@ namespace Matryoshka\Scafolding\Console;
 
 use Matryoshka\Scafolding\Service\SkeletonInterface;
 use Zend\Console\ColorInterface;
+use Zend\Console\Prompt\Char;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
@@ -55,6 +56,15 @@ class ModuleController extends AbstractConsoleController
         }
 
         $skeleton->generateModuleClass($path);
+        if ($verbose) {
+            $this->infoMessage('Modele.php created');
+        }
+
+        $answer = Char::prompt( 'Do you what put setter and getter in trait? [y, n]',
+            'yn',
+            true,
+            false,
+            false);
     }
 
     protected function isZf2Application($path)
