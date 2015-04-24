@@ -2,8 +2,10 @@
 namespace Matryoshka\Scafolding\Service;
 
 use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Code\Generator\MethodGenerator;
+use Zend\Code\Generator\ValueGenerator;
 use Zend\Filter\File\UpperCase;
 use Zend\Filter\UpperCaseWords;
 use Zend\Filter\Word\CamelCaseToDash;
@@ -51,6 +53,7 @@ class Skeleton implements SkeletonInterface
      */
     public function generateModuleClass($path)
     {
+        // TODO check if already exist
         $class = new ClassGenerator();
         $class->setName('Module');
         $class->setNamespaceName($this->getModuleName());
@@ -76,6 +79,38 @@ class Skeleton implements SkeletonInterface
         $file->setClass($class);
 
         return file_put_contents($path . "/module/" . $this->getModuleName() . "/Module.php", $file->generate());
+    }
+
+    public function generateApplicationConfig($path)
+    {
+        // TODO check if already exist
+        $oldApplicationConfig = include $path . "/config/application.config.php";
+
+        if (!in_array($this->getModuleName(), $oldApplicationConfig['modules'])) {
+            $oldApplicationConfig['modules'][] = $this->getModuleName();
+        }
+
+        copy($path . "/config/application.config.php",
+            $path . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
+        );
+
+        $file = new FileGenerator();
+        $file->setFilename("application.config.php");
+
+        $docBlock = new DocBlockGenerator();
+        $docBlock->setShortDescription('Test'); // TODO refactor
+        $docBlock->setLongDescription('Test test'); // TODO refactor
+
+        $file->setDocBlock($docBlock);
+
+        $valueGenerator = new ValueGenerator();
+        $valueGenerator->setValue($oldApplicationConfig);
+        $valueGenerator->setArrayDepth(0);
+
+        $file->setBody("return " .$valueGenerator->generate() . ";");
+
+
+        return file_put_contents($path . "/config/" . $file->getFilename(), $file->generate());
     }
 
     /**

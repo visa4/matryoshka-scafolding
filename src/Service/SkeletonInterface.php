@@ -41,4 +41,10 @@ interface SkeletonInterface
      * @return bool|int
      */
     public function generateModuleClass($path);
+
+    /**
+     * @param $path
+     * @return bool|int
+     */
+    public function generateApplicationConfig($path);
 } 

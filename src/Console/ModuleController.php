@@ -60,11 +60,13 @@ class ModuleController extends AbstractConsoleController
             $this->infoMessage('Modele.php created');
         }
 
-        $answer = Char::prompt( 'Do you what put setter and getter in trait? [y, n]',
+        $useTraitForGetterSetter = Char::prompt( 'Do you what put setter and getter in trait? [y, n]',
             'yn',
             true,
             false,
             false);
+
+        $skeleton->generateApplicationConfig($path);
     }
 
     protected function isZf2Application($path)
