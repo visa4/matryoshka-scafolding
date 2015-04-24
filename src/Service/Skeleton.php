@@ -7,6 +7,7 @@ use Zend\Code\Generator\MethodGenerator;
 use Zend\Filter\File\UpperCase;
 use Zend\Filter\UpperCaseWords;
 use Zend\Filter\Word\CamelCaseToDash;
+use Zend\Form\Element\File;
 
 /**
  * Class GenerateSkeleton
@@ -50,9 +51,9 @@ class Skeleton implements SkeletonInterface
      */
     public function generateModuleClass($path)
     {
-        $module = new FileGenerator();
-        $module->setName('Module');
-        $module->setNamespaceName($this->getModuleName());
+        $class = new ClassGenerator();
+        $class->setName('Module');
+        $class->setNamespaceName($this->getModuleName());
 
         $getConfigMethod = new MethodGenerator();
         $getConfigMethod->setName('getConfig');
@@ -60,7 +61,12 @@ class Skeleton implements SkeletonInterface
         $getAutoloaderConfigMethod = new MethodGenerator();
         $getAutoloaderConfigMethod->setName('getAutoloaderConfig');
 
-        return file_put_contents($path, $module->generate());
+        $class->addMethods([$getConfigMethod, $getAutoloaderConfigMethod]);
+
+        $file = new FileGenerator();
+        $file->setClass($class);
+
+        return file_put_contents($path . "/Module.php", $class->generate());
     }
 
     /**
