@@ -2,9 +2,9 @@
 namespace Matryoshka\Scafolding\Service;
 
 /**
- * Class GenerateHydrator
+ * Interface ConfigInterface
  */
-class GenerateHydrator
+interface ConfigInterface
 {
 
 } 

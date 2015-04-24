@@ -36,7 +36,7 @@ switch (true) {
 
 if (isset($config['modules']) && !isset($config['modules']['Matryoshka\Scafolding'])) {
     if (file_exists(__DIR__ . '/../config/console.config.php')) {
-        $moduleConfig = include_once __DIR__ . '/../config/console.config.php';
+        $moduleConfig = include __DIR__ . '/../config/console.config.php';;
         $config = ArrayUtils::merge($config, $moduleConfig);
     }
 }

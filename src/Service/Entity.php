@@ -2,9 +2,9 @@
 namespace Matryoshka\Scafolding\Service;
 
 /**
- * Class GenerateEntity
+ * Class Entity
  */
-class GenerateEntity
+class Entity implements EntityInterface
 {
     /**
      * @var bool

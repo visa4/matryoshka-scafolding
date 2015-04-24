@@ -22,11 +22,11 @@ class ModuleController extends AbstractConsoleController
             $this->infoMessage('Start create skeleton');
         }
 
-        /* @var $serviceSkeleton SkeletonInterface */
-        $serviceSkeleton = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\ServiceSkeleton');
-        $moduleName = $serviceSkeleton->generateName($name);
+        /* @var $skeleton SkeletonInterface */
+        $skeleton = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Skeleton');
+        $moduleName = $skeleton->getModuleName();
 
-        if (!file_exists("$path/module") || !file_exists("$path/config/application.config.php")) {
+        if ($this->isZf2Application($path)) {
             $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
             return 0;
         }
@@ -39,22 +39,34 @@ class ModuleController extends AbstractConsoleController
         }
 
         if ($moduleExist) {
-            $this->errorMessage(sprintf('Module %s already exist', $name));
+            $this->errorMessage('Impossible create foldes skeleton, please controll permission folder');
             return 0;
         }
 
-        $isFoldersSkeletonCreated = $serviceSkeleton->generateConfigFolder($moduleName, $path) &&
-            $serviceSkeleton->generateViewFolder($moduleName, $path);
+        $isFoldersSkeletonCreated = $skeleton->generateConfigFolder($moduleName, $path) &&
+            $skeleton->generateViewFolder($moduleName, $path) &&
+            $skeleton->generateSrcFolder($moduleName, $path)
+        ;
 
-        if ($isFoldersSkeletonCreated) {
-            if ($verbose) {
-                $this->infoMessage('Folders created');
-            }
-        } else {
+        if (!$isFoldersSkeletonCreated) {
             // TODO remove folder
+            $this->errorMessage('');
+        }
+
+        if ($verbose) {
+            $this->infoMessage('Folders created');
         }
     }
 
+    protected function isZf2Application($path)
+    {
+        return !file_exists($path . "/module") || !file_exists($path . "/config/application.config.php");
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
     protected function moduleExist($name)
     {
         $sm = $this->getServiceLocator();

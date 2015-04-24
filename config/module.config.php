@@ -2,7 +2,7 @@
 $config = [
     'service_manager' => [
         'invokables' => [
-            'Matryoshka\Scafolding\Service\ServiceSkeleton' => 'Matryoshka\Scafolding\Service\ServiceSkeleton',
+            'Matryoshka\Scafolding\Service\Skeleton' => 'Matryoshka\Scafolding\Service\Skeleton',
         ],
     ],
     'controllers' => [

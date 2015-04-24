@@ -7,14 +7,21 @@
 
 namespace Matryoshka\Scafolding\Service;
 
-
+/**
+ * Interface SkeletonInterface
+ */
 interface SkeletonInterface
 {
     /**
-     * @param $nameModule
      * @return string
      */
-    public function generateName($nameModule);
+    public function getModuleName();
+
+    /**
+     * @param $nameEntity
+     * @return string
+     */
+    public function generateNameEntity($nameEntity);
 
     /**
      * @param $nameModule
@@ -23,10 +30,11 @@ interface SkeletonInterface
      */
     public function generateConfigFolder($nameModule, $path);
 
+
     /**
      * @param $nameModule
      * @param $path
      * @return bool
      */
-    public function generateViewFolder($nameModule, $path);
+    public function generateSrcFolder($nameModule, $path);
 } 
