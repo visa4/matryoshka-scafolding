@@ -60,8 +60,37 @@ class ModuleController extends AbstractConsoleController
             $this->infoMessage('Modele.php created');
         }
 
-        $useTraitForGetterSetter = Char::prompt( 'Do you what put setter and getter in trait? [y, n]',
+        $propriety = Char::prompt( 'Do you what to add propriety? [y, n]',
             'yn',
+            true,
+            false,
+            false);
+var_dump($propriety); die();
+//        while () {
+
+  //      }
+
+
+        $useInterfaceForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Interface? [y, n]',
+            'yn',
+            true,
+            false,
+            false);
+
+        $useTraitForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Trait? [y, n]',
+            'yn',
+            true,
+            false,
+            false);
+
+        $HydratorClass = Char::prompt( 'Do you what to use ClassMethod hydrate or ObjectPropriety hydrate? [c, o]',
+            'co',
+            true,
+            false,
+            false);
+
+        $HydrateStrategy = Char::prompt( 'Do you what to use undescore hydrate strategy o camelcase hydrate strategy? [u, c]',
+            'uc',
             true,
             false,
             false);

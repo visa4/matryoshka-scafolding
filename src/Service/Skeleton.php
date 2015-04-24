@@ -58,6 +58,7 @@ class Skeleton implements SkeletonInterface
         $class->setName('Module');
         $class->setNamespaceName($this->getModuleName());
 
+        // TODO docBlock
         $getConfigMethod = new MethodGenerator();
         $getConfigMethod->setName('getConfig');
         $getConfigMethod->setBody("return include __DIR__ . '/config/module.config.php';");
