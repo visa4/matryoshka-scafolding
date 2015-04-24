@@ -1,6 +1,9 @@
 <?php
 namespace Matryoshka\Scafolding\Service;
 
+use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\FileGenerator;
+use Zend\Code\Generator\MethodGenerator;
 use Zend\Filter\File\UpperCase;
 use Zend\Filter\UpperCaseWords;
 use Zend\Filter\Word\CamelCaseToDash;
@@ -29,7 +32,7 @@ class Skeleton implements SkeletonInterface
     /**
      * @inheritdoc
      */
-    public function generateConfigFolder($nameModule, $path)
+    public function generateConfigFolder($path)
     {
         return mkdir($path . "/module/" . $this->getModuleName() . "/config", 0777, true);
     }
@@ -37,20 +40,27 @@ class Skeleton implements SkeletonInterface
     /**
      * @inheritdoc
      */
-    public function generateSrcFolder($nameModule, $path)
+    public function generateSrcFolder($path)
     {
         return mkdir($path . "/module/" . $this->getModuleName() . "/src", 0777, true);
     }
 
     /**
      * @inheritdoc
-     * @deprecated
      */
-    public function generateViewFolder($nameModule, $path)
+    public function generateModuleClass($path)
     {
-        $filter = new CamelCaseToDash();
-        $viewFolder = strtolower($filter->filter($nameModule));
-        return mkdir($path . "/module/" . $nameModule . "/view/" . $viewFolder, 0777, true);
+        $module = new FileGenerator();
+        $module->setName('Module');
+        $module->setNamespaceName($this->getModuleName());
+
+        $getConfigMethod = new MethodGenerator();
+        $getConfigMethod->setName('getConfig');
+
+        $getAutoloaderConfigMethod = new MethodGenerator();
+        $getAutoloaderConfigMethod->setName('getAutoloaderConfig');
+
+        return file_put_contents($path, $module->generate());
     }
 
     /**

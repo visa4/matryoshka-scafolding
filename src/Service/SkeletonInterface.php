@@ -24,17 +24,21 @@ interface SkeletonInterface
     public function generateNameEntity($nameEntity);
 
     /**
-     * @param $nameModule
      * @param $path
      * @return bool
      */
-    public function generateConfigFolder($nameModule, $path);
+    public function generateConfigFolder($path);
 
 
     /**
-     * @param $nameModule
      * @param $path
      * @return bool
      */
-    public function generateSrcFolder($nameModule, $path);
+    public function generateSrcFolder($path);
+
+    /**
+     * @param $path
+     * @return bool|int
+     */
+    public function generateModuleClass($path);
 } 

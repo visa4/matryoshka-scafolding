@@ -39,23 +39,22 @@ class ModuleController extends AbstractConsoleController
         }
 
         if ($moduleExist) {
-            $this->errorMessage('Impossible create foldes skeleton, please controll permission folder');
+            $this->errorMessage('Impossible create folders skeleton, please control permission');
             return 0;
         }
 
         $isFoldersSkeletonCreated = $skeleton->generateConfigFolder($moduleName, $path) &&
-            $skeleton->generateViewFolder($moduleName, $path) &&
             $skeleton->generateSrcFolder($moduleName, $path)
         ;
 
         if (!$isFoldersSkeletonCreated) {
             // TODO remove folder
             $this->errorMessage('');
-        }
-
-        if ($verbose) {
+        } elseif ($verbose) {
             $this->infoMessage('Folders created');
         }
+
+        $skeleton->generateModuleClass($path);
     }
 
     protected function isZf2Application($path)
@@ -82,10 +81,5 @@ class ModuleController extends AbstractConsoleController
             return true;
         }
         return false;
-    }
-
-    protected function createConfigFolder()
-    {
-
     }
 }
