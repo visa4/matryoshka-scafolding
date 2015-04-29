@@ -64,7 +64,7 @@ class ModuleController extends AbstractConsoleController
             $this->infoMessage('Modele.php created');
         }
 
-        $listPropriety = $this->addPropriety();
+        $listPropriety = $this->getProprietyList();
         var_dump($listPropriety);
         die();
 
