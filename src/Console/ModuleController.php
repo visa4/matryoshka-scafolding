@@ -60,16 +60,7 @@ class ModuleController extends AbstractConsoleController
             $this->infoMessage('Modele.php created');
         }
 
-        $propriety = Char::prompt( 'Do you what to add propriety? [y, n]',
-            'yn',
-            true,
-            false,
-            false);
-var_dump($propriety); die();
-//        while () {
-
-  //      }
-
+        $listPropriety = $this->addPropriety();
 
         $useInterfaceForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Interface? [y, n]',
             'yn',
@@ -98,6 +89,22 @@ var_dump($propriety); die();
         $skeleton->generateApplicationConfig($path);
     }
 
+    protected function addPropriety()
+    {
+        $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
+
+        while ($addPropriety == 'y') {
+
+            $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
+        }
+        $list = [];
+        return $list;
+    }
+
+    /**
+     * @param $path
+     * @return bool
+     */
     protected function isZf2Application($path)
     {
         return !file_exists($path . "/module") || !file_exists($path . "/config/application.config.php");
