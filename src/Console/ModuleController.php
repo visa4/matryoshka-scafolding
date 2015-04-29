@@ -2,8 +2,11 @@
 namespace Matryoshka\Scafolding\Console;
 
 use Matryoshka\Scafolding\Service\SkeletonInterface;
+use Zend\Code\Generator\PropertyGenerator;
 use Zend\Console\ColorInterface;
 use Zend\Console\Prompt\Char;
+use Zend\Console\Prompt\Line;
+use Zend\Console\Prompt\Select;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
@@ -31,7 +34,7 @@ class ModuleController extends AbstractConsoleController
             $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
             return 0;
         }
-
+        // Module exist
         try{
             $moduleExist = $this->moduleExist($moduleName);
         } catch(\Exception $e) {
@@ -44,6 +47,7 @@ class ModuleController extends AbstractConsoleController
             return 0;
         }
 
+        // Create folder
         $isFoldersSkeletonCreated = $skeleton->generateConfigFolder($path) &&
             $skeleton->generateSrcFolder($path)
         ;
@@ -61,6 +65,8 @@ class ModuleController extends AbstractConsoleController
         }
 
         $listPropriety = $this->addPropriety();
+        var_dump($listPropriety);
+        die();
 
         $useInterfaceForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Interface? [y, n]',
             'yn',
@@ -89,15 +95,35 @@ class ModuleController extends AbstractConsoleController
         $skeleton->generateApplicationConfig($path);
     }
 
-    protected function addPropriety()
+    /**
+     * @return array
+     */
+    protected function getProprietyList()
     {
         $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
-
+        $list = [];
         while ($addPropriety == 'y') {
 
+            $propriety['name'] = Line::prompt('Enter name propriety (max 20):', false, 20);
+            $propriety['const'] = Char::prompt( 'Enter abstract [y, n]', 'yn', true, false, false);
+            $propriety['defaultvalue'] = Char::prompt( 'Enter abstract [y, n]', 'yn', true, false, false);
+
+            if ($propriety['const'] == 'n') {
+
+                $propriety['visibility'] = Select::prompt(
+                    'Enter visibility:',
+                    [PropertyGenerator::FLAG_PUBLIC, PropertyGenerator::FLAG_PROTECTED, PropertyGenerator::FLAG_PRIVATE],
+                    false,
+                    true
+                );
+                $propriety['static'] = Char::prompt( 'Enter static [y, n]', 'yn', true, false, false);
+                $propriety['abstract'] = Char::prompt( 'Enter abstract [y, n]', 'yn', true, false, false);
+            }
+
+            $list[] = $propriety;
             $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
         }
-        $list = [];
+
         return $list;
     }
 
