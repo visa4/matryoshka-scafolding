@@ -26,6 +26,11 @@ class Entity implements EntityInterface, ServiceLocatorAwareInterface
     protected $generateInterface = true;
 
     /**
+     * @var array
+     */
+    protected $proprietyList;
+
+    /**
      * @return boolean
      */
     public function isGenerateInterface()
@@ -61,6 +66,26 @@ class Entity implements EntityInterface, ServiceLocatorAwareInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getProprietyList()
+    {
+        return $this->proprietyList;
+    }
+
+    /**
+     * @param array $proprietyList
+     * @return $this
+     */
+    public function setProprietyList(array $proprietyList)
+    {
+        $this->proprietyList = $proprietyList;
+        return $this;
+    }
+
+
+
     public function generateEntity()
     {
         $useInterfaceForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Interface? [y, n]',
@@ -69,7 +94,7 @@ class Entity implements EntityInterface, ServiceLocatorAwareInterface
             false,
             false);
 
-        $this->setGenerateTrait($useInterfaceForGetterSetter = 'y' ? true : false);
+        $this->setGenerateTrait($useInterfaceForGetterSetter == 'y' ? true : false);
 
         $useTraitForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Trait? [y, n]',
             'yn',
@@ -77,21 +102,25 @@ class Entity implements EntityInterface, ServiceLocatorAwareInterface
             false,
             false);
 
-        $this->setGenerateTrait($useTraitForGetterSetter = 'y' ? true : false);
+        $this->setGenerateTrait($useTraitForGetterSetter == 'y' ? true : false);
 
         $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
         $list = [];
         while ($addPropriety == 'y') {
 
-            $propriety['name'] = Line::prompt('Enter name propriety (max 20):', false, 20);
             $propriety['const'] = Char::prompt( 'Enter const [y, n]', 'yn', true, false, false);
+            $propriety['name'] = Line::prompt('Enter name propriety (max 20):', false, 20);
             $propriety['defaultvalue'] =  Line::prompt('Enter default value (max 20):', false, 20);
 
             if ($propriety['const'] == 'n') {
 
                 $propriety['visibility'] = Select::prompt(
                     'Enter visibility:',
-                    [PropertyGenerator::FLAG_PUBLIC, PropertyGenerator::FLAG_PROTECTED, PropertyGenerator::FLAG_PRIVATE],
+                    [
+                        PropertyGenerator::VISIBILITY_PUBLIC,
+                        PropertyGenerator::VISIBILITY_PROTECTED,
+                        PropertyGenerator::VISIBILITY_PRIVATE
+                    ],
                     false,
                     true
                 );
@@ -103,10 +132,6 @@ class Entity implements EntityInterface, ServiceLocatorAwareInterface
             $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
         }
 
-        var_dump(get_class($this->getServiceLocator()));
-        var_dump($this);
-        var_dump($list);
-        die();
-
+        $this->setProprietyList($list);
     }
 } 

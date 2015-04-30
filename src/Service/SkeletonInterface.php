@@ -47,4 +47,16 @@ interface SkeletonInterface
      * @return bool|int
      */
     public function generateApplicationConfig($path);
+
+    /**
+     * @return bool
+     */
+    public function moduleExist();
+
+    /**
+     * @param $path
+     * @return bool
+     */
+    public function isZf2Application($path);
+
 } 

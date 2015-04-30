@@ -10,6 +10,7 @@ use Zend\Filter\File\UpperCase;
 use Zend\Filter\UpperCaseWords;
 use Zend\Filter\Word\CamelCaseToDash;
 use Zend\Form\Element\File;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -112,10 +113,38 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
         $valueGenerator->setValue($oldApplicationConfig);
         $valueGenerator->setArrayDepth(0);
 
-        $file->setBody("return " .$valueGenerator->generate() . ";");
+        $file->setBody("return " . $valueGenerator->generate() . ";");
 
 
         return file_put_contents($path . "/config/" . $file->getFilename(), $file->generate());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function moduleExist()
+    {
+        $sm = $this->getServiceLocator();
+        try{
+            /* @var $mm \Zend\ModuleManager\ModuleManager */
+            $mm = $sm->get('modulemanager');
+        } catch(ServiceNotFoundException $e) {
+            throw new \RuntimeException('Cannot get Zend\ModuleManager\ModuleManager instance');
+        }
+
+        $moduleName = $mm->getModule($this->getModuleName());
+        if ($moduleName) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isZf2Application($path)
+    {
+        return !file_exists($path . "/module") || !file_exists($path . "/config/application.config.php");
     }
 
     /**
