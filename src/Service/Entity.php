@@ -5,12 +5,16 @@ use Zend\Code\Generator\PropertyGenerator;
 use Zend\Console\Prompt\Char;
 use Zend\Console\Prompt\Line;
 use Zend\Console\Prompt\Select;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Class Entity
  */
-class Entity implements EntityInterface
+class Entity implements EntityInterface, ServiceLocatorAwareInterface
 {
+    use ServiceLocatorAwareTrait
+
     /**
      * @var bool
      */
@@ -99,6 +103,7 @@ class Entity implements EntityInterface
             $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
         }
 
+        var_dump(get_class($this->getServiceLocator()));
         var_dump($this);
         var_dump($list);
         die();

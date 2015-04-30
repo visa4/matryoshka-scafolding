@@ -10,12 +10,16 @@ use Zend\Filter\File\UpperCase;
 use Zend\Filter\UpperCaseWords;
 use Zend\Filter\Word\CamelCaseToDash;
 use Zend\Form\Element\File;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Class GenerateSkeleton
  */
-class Skeleton implements SkeletonInterface
+class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
 {
+    use ServiceLocatorAwareTrait;
+
     const DEFAULT_MODULE_NAME = 'MatryoshkaModel';
 
     /**
