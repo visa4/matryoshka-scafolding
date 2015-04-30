@@ -13,7 +13,7 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  */
 class Entity implements EntityInterface, ServiceLocatorAwareInterface
 {
-    use ServiceLocatorAwareTrait
+    use ServiceLocatorAwareTrait;
 
     /**
      * @var bool
