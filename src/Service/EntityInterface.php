@@ -6,5 +6,8 @@ namespace Matryoshka\Scafolding\Service;
  */
 interface EntityInterface
 {
-
+    /**
+     * @return mixed
+     */
+    public function generateEntity();
 } 

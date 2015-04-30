@@ -1,6 +1,7 @@
 <?php
 namespace Matryoshka\Scafolding\Console;
 
+use Matryoshka\Scafolding\Service\EntityInterface;
 use Matryoshka\Scafolding\Service\SkeletonInterface;
 use Zend\Code\Generator\PropertyGenerator;
 use Zend\Console\ColorInterface;
@@ -27,8 +28,11 @@ class ModuleController extends AbstractConsoleController
         }
 
         /* @var $skeleton SkeletonInterface */
-        $skeleton = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Skeleton');
-        $moduleName = $skeleton->getModuleName();
+        $skeletonService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Skeleton');
+        /* @var $entityService EntityInterface */
+        $entityService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Entity');
+
+        $moduleName = $skeletonService->getModuleName();
 
         if ($this->isZf2Application($path)) {
             $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
@@ -48,8 +52,8 @@ class ModuleController extends AbstractConsoleController
         }
 
         // Create folder
-        $isFoldersSkeletonCreated = $skeleton->generateConfigFolder($path) &&
-            $skeleton->generateSrcFolder($path)
+        $isFoldersSkeletonCreated = $skeletonService->generateConfigFolder($path) &&
+            $skeletonService->generateSrcFolder($path)
         ;
 
         if (!$isFoldersSkeletonCreated) {
@@ -59,27 +63,14 @@ class ModuleController extends AbstractConsoleController
             $this->infoMessage('Folders created');
         }
 
-        $skeleton->generateModuleClass($path);
+        $skeletonService->generateModuleClass($path);
         if ($verbose) {
             $this->infoMessage('Modele.php created');
         }
 
-        $listPropriety = $this->getProprietyList();
-        var_dump($listPropriety);
-        die();
+        $entityService->generateEntity();
 
-        $useInterfaceForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Interface? [y, n]',
-            'yn',
-            true,
-            false,
-            false);
-
-        $useTraitForGetterSetter = Char::prompt( 'Do you what to put setter and getter in Trait? [y, n]',
-            'yn',
-            true,
-            false,
-            false);
-
+/*
         $HydratorClass = Char::prompt( 'Do you what to use ClassMethod hydrate or ObjectPropriety hydrate? [c, o]',
             'co',
             true,
@@ -91,40 +82,8 @@ class ModuleController extends AbstractConsoleController
             true,
             false,
             false);
-
+*/
         $skeleton->generateApplicationConfig($path);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getProprietyList()
-    {
-        $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
-        $list = [];
-        while ($addPropriety == 'y') {
-
-            $propriety['name'] = Line::prompt('Enter name propriety (max 20):', false, 20);
-            $propriety['const'] = Char::prompt( 'Enter abstract [y, n]', 'yn', true, false, false);
-            $propriety['defaultvalue'] = Char::prompt( 'Enter abstract [y, n]', 'yn', true, false, false);
-
-            if ($propriety['const'] == 'n') {
-
-                $propriety['visibility'] = Select::prompt(
-                    'Enter visibility:',
-                    [PropertyGenerator::FLAG_PUBLIC, PropertyGenerator::FLAG_PROTECTED, PropertyGenerator::FLAG_PRIVATE],
-                    false,
-                    true
-                );
-                $propriety['static'] = Char::prompt( 'Enter static [y, n]', 'yn', true, false, false);
-                $propriety['abstract'] = Char::prompt( 'Enter abstract [y, n]', 'yn', true, false, false);
-            }
-
-            $list[] = $propriety;
-            $addPropriety = Char::prompt( 'Do you what to add propriety? [y, n]', 'yn', true, false, false);
-        }
-
-        return $list;
     }
 
     /**

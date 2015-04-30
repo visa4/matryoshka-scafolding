@@ -3,6 +3,7 @@ $config = [
     'service_manager' => [
         'invokables' => [
             'Matryoshka\Scafolding\Service\Skeleton' => 'Matryoshka\Scafolding\Service\Skeleton',
+            'Matryoshka\Scafolding\Service\Entity' => 'Matryoshka\Scafolding\Service\Entity',
         ],
     ],
     'controllers' => [
