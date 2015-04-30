@@ -3,6 +3,7 @@ namespace Matryoshka\Scafolding\Service;
 
 use Zend\Code\Generator\PropertyGenerator;
 use Zend\Console\Prompt\Char;
+use Zend\Console\Prompt\Line;
 use Zend\Console\Prompt\Select;
 
 /**
