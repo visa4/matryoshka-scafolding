@@ -4,7 +4,11 @@ $config = [
         'invokables' => [
             'Matryoshka\Scafolding\Service\Skeleton' => 'Matryoshka\Scafolding\Service\Skeleton',
             'Matryoshka\Scafolding\Service\Entity' => 'Matryoshka\Scafolding\Service\Entity',
+            'Matryoshka\Scafolding\Service\Model' => 'Matryoshka\Scafolding\Service\Model',
         ],
+        'factories' => [
+            'Matryoshka\Scafolding\Service\Hydrator\Hydrator' => 'Matryoshka\Scafolding\Service\Hydrator\HydratorFactory',
+        ]
     ],
     'controllers' => [
         'invokables' => [

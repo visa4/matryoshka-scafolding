@@ -18,23 +18,47 @@ interface SkeletonInterface
     public function getModuleName();
 
     /**
-     * @param $nameEntity
-     * @return string
-     */
-    public function generateNameEntity($nameEntity);
-
-    /**
+     * Return string path in create the folder false if cant create folder
+     *
      * @param $path
-     * @return bool
+     * @return string|bool
      */
     public function generateConfigFolder($path);
 
-
     /**
+     * Return string path in create the folder false if cant create folder
+     *
      * @param $path
-     * @return bool
+     * @return string|bool
      */
     public function generateSrcFolder($path);
+
+    /**
+     * Return string path in create the folder false if cant create folder
+     *
+     * @param $path
+     * @param $entityName
+     * @return string|bool
+     */
+    public function generateModelFolder($path, $entityName);
+
+    /**
+     * Return string path in create the folder false if cant create folder
+     *
+     * @param $path
+     * @param $entityName
+     * @return string|bool
+     */
+    public function generateEntityFolder($path, $entityName);
+
+    /**
+     * Return string path in create the folder false if cant create folder
+     *
+     * @param $path
+     * @param $entityName
+     * @return string|bool
+     */
+    public function generateHydratorFolder($path, $entityName);
 
     /**
      * @param $path

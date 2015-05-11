@@ -4,10 +4,13 @@ namespace Matryoshka\Scafolding\Service;
 /**
  * Interface EntityInterface
  */
-interface EntityInterface
+interface EntityInterface extends ObjectInterface
 {
+    const ENTITY_CLASS_SUFFIX = 'Entity';
+
     /**
-     * @return mixed
+     * @param $path
+     * @return bool
      */
-    public function generateEntity();
+    public function existEntityFolder($path);
 } 

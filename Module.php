@@ -1,10 +1,10 @@
 <?php
 namespace Matryoshka\Scafolding;
 
-use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Console\Adapter\AdapterInterface;
+use Zend\ModuleManager\Feature\InputFilterProviderInterface;
 
-class Module
+class Module implements InputFilterProviderInterface
 {
     /**
      * {@inheritdoc}
@@ -29,8 +29,7 @@ class Module
     }
 
     /**
-     * @param AdapterInterface $console
-     * @return array
+     * {@inheritdoc}
      */
     public function getConsoleUsage(AdapterInterface $console)
     {
@@ -38,5 +37,13 @@ class Module
             'Scafolding usage:',
             'create module [--verbose|-v] <name>' =>  'Create a new matryoshka model module'
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInputFilterConfig()
+    {
+        return include __DIR__ . '/config/filter.config.php';
     }
 } 

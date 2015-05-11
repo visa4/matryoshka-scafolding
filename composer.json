@@ -7,7 +7,8 @@
         "zendframework/zendframework": "~2.3"
     },
     "require-dev": {
-        "zendframework/zftool": "dev-master"
+        "zendframework/zftool": "dev-master",
+        "matryoshka-model/matryoshka": "0.6.1"
     },
     "bin": [
        "bin/mtk_console.php"

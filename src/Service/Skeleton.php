@@ -6,10 +6,6 @@ use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Code\Generator\ValueGenerator;
-use Zend\Filter\File\UpperCase;
-use Zend\Filter\UpperCaseWords;
-use Zend\Filter\Word\CamelCaseToDash;
-use Zend\Form\Element\File;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -31,18 +27,13 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateNameEntity($nameEntity)
-    {
-        $filter = new UpperCaseWords();
-        return $filter->filter($nameEntity);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function generateConfigFolder($path)
     {
-        return mkdir($path . "/module/" . $this->getModuleName() . "/config", 0777, true);
+        $path = $path . "/module/" . $this->getModuleName() . "/config";
+        if (is_dir($path) || mkdir($path, 0777, true)) {
+            return $path;
+        }
+        return false;
     }
 
     /**
@@ -50,7 +41,48 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
      */
     public function generateSrcFolder($path)
     {
-        return mkdir($path . "/module/" . $this->getModuleName() . "/src", 0777, true);
+        $path = $path . "/module/" . $this->getModuleName() . "/src";
+
+        if (is_dir($path) || mkdir($path, 0777, true)) {
+            return $path;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function generateModelFolder($path, $entityName)
+    {
+        $path = $path . "/module/" . $this->getModuleName() . "/src/" . $entityName;
+        if (is_dir($path) || mkdir($path, 0777, true)) {
+            return $path;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function generateEntityFolder($path, $entityName)
+    {
+        $path = $path . "/module/" . $this->getModuleName() . "/src/" . $entityName . '/Entity';
+        if (is_dir($path) || mkdir($path, 0777, true)) {
+            return $path;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function generateHydratorFolder($path, $entityName)
+    {
+        $path = $path . "/module/" . $this->getModuleName() . "/src/" . $entityName . '/Hydrator';
+        if (is_dir($path) || mkdir($path, 0777, true)) {
+            return $path;
+        }
+        return false;
     }
 
     /**
