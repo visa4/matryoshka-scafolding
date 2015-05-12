@@ -1,11 +1,9 @@
 <?php
 namespace Matryoshka\Scafolding\Service\Hydrator;
 
-use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Oop\ResourceTrait;
 use Matryoshka\Scafolding\Oop\Utils;
-use Matryoshka\Scafolding\Service\ObjectInterface;
-use Matryoshka\Scafolding\Service\PromptSettingInterface;
+use Matryoshka\Scafolding\Service\ObjectAwareTrait;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 
@@ -15,32 +13,12 @@ use Zend\Code\Generator\FileGenerator;
 class Hydrator implements HydratorInterface
 {
     use ResourceTrait;
-    /**
-     * @var ObjectInterface
-     */
-    protected $objectService;
+    use ObjectAwareTrait;
 
     /**
      * @var ClassGenerator
      */
     protected $hydrator;
-
-    /**
-     * @return ObjectInterface
-     */
-    public function getObjectService()
-    {
-        return $this->objectService;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setObjectService(ObjectInterface $objectService)
-    {
-        $this->objectService = $objectService;
-        return $this;
-    }
 
     /**
      * @inheritdoc
@@ -62,7 +40,8 @@ class Hydrator implements HydratorInterface
             $this->hydrator->addUse('Matryoshka\Model\Hydrator\ClassMethods');
             $this->hydrator->setExtendedClass('ClassMethods');
         } else {
-
+            $this->hydrator->addUse('Zend\Stdlib\Hydrator\ObjectProperty');
+            $this->hydrator->setExtendedClass('ObjectProperty');
         }
 
         $this->hydrator->setName(Utils::buildName($this->getName(), HydratorInterface::OBJECT_CLASS_SUFFIX));

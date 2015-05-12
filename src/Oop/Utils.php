@@ -4,7 +4,6 @@ namespace Matryoshka\Scafolding\Oop;
 use Matryoshka\Scafolding\Exception\RuntimeException;
 use Matryoshka\Scafolding\Filter\LcFirst;
 use Matryoshka\Scafolding\Filter\UcFirst;
-use Matryoshka\Scafolding\Service\Hydrator\Hydrator;
 use Matryoshka\Scafolding\Service\Hydrator\HydratorInterface;
 use Matryoshka\Scafolding\Service\ObjectInterface;
 use Zend\Code\Generator\DocBlockGenerator;

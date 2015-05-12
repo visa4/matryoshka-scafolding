@@ -33,4 +33,9 @@ interface ResourceInterface
      * @return $this
      */
     public function setNameSpace($nameSpace);
+
+    /**
+     * @return string
+     */
+    public function getFullQualifiedClassName();
 }

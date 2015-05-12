@@ -1,11 +1,6 @@
 <?php
-/**
- * Created by visa
- * Date:  21/04/15 13.09
- * Class: SkeletonInterface.php
- */
 
-namespace Matryoshka\Scafolding\Service;
+namespace Matryoshka\Scafolding\Service\Skeleton;
 
 /**
  * Interface SkeletonInterface

@@ -1,5 +1,5 @@
 <?php
-namespace Matryoshka\Scafolding\Service;
+namespace Matryoshka\Scafolding\Service\Model;
 
 /**
  * Interface ModelInterface

@@ -60,4 +60,12 @@ trait ResourceTrait
         $this->nameSpace = $nameSpace;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullQualifiedClassName()
+    {
+        return $this->getNameSpace() . '\\' . $this->getName();
+    }
 }

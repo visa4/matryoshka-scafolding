@@ -5,7 +5,10 @@
     "require": {
         "php": ">=5.4.0",
         "zendframework/zendframework": "~2.3",
-        "matryoshka-model/matryoshka": "0.6.1"
+        "matryoshka-model/matryoshka": "0.6.0",
+        "matryoshka-model/mongo-wrapper": "0.6.0",
+        "matryoshka-model/rest-wrapper": "0.6.0"
+
     },
     "require-dev": {
         "zendframework/zftool": "dev-master"

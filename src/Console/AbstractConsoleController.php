@@ -2,10 +2,11 @@
 namespace Matryoshka\Scafolding\Console;
 
 use Matryoshka\Scafolding\Exception\RuntimeException;
+use Matryoshka\Scafolding\Service\Config\ConfigInterface;
 use Matryoshka\Scafolding\Service\EntityInterface;
 use Matryoshka\Scafolding\Service\Hydrator\HydratorInterface;
-use Matryoshka\Scafolding\Service\ModelInterface;
-use Matryoshka\Scafolding\Service\SkeletonInterface;
+use Matryoshka\Scafolding\Service\Model\ModelInterface;
+use Matryoshka\Scafolding\Service\Skeleton\SkeletonInterface;
 use Zend\Console\ColorInterface;
 use Zend\Mvc\Controller\AbstractConsoleController as Zf2AbstractConsoleController;
 
@@ -35,6 +36,12 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
     protected $hydratorService;
 
     /**
+     * @var ConfigInterface
+     */
+    protected $configService;
+
+
+    /**
      * @param $message
      */
     protected function errorMessage($message)
@@ -61,13 +68,13 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
             return $this->skeletonService;
         }
 
-        if ($this->getServiceLocator()->has('Matryoshka\Scafolding\Service\Skeleton')) {
-            $this->skeletonService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Skeleton');
+        if ($this->getServiceLocator()->has('Matryoshka\Scafolding\Service\Skeleton\Skeleton')) {
+            $this->skeletonService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Skeleton\Skeleton');
             return $this->skeletonService;
         }
 
         throw new RuntimeException(
-            sprintf('Service %s must be se on service locator', 'Matryoshka\Scafolding\Service\Skeleton')
+            sprintf('Service %s must be se on service locator', 'Matryoshka\Scafolding\Service\Skeleton\Skeleton')
         );
     }
 
@@ -99,13 +106,13 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
             return $this->modelService;
         }
 
-        if ($this->getServiceLocator()->has('Matryoshka\Scafolding\Service\Model')) {
-            $this->modelService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Model');
+        if ($this->getServiceLocator()->has('Matryoshka\Scafolding\Service\Model\Model')) {
+            $this->modelService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Model\Model');
             return $this->modelService;
         }
 
         throw new RuntimeException(
-            sprintf('Service %s must be se on service locator', 'Matryoshka\Scafolding\Service\Model')
+            sprintf('Service %s must be se on service locator', 'Matryoshka\Scafolding\Service\Model\Model')
         );
     }
 
@@ -125,6 +132,25 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
 
         throw new RuntimeException(
             sprintf('Service %s must be se on service locator', 'Matryoshka\Scafolding\Service\Hydrator\Hydrator')
+        );
+    }
+
+    /**
+     * @return HydratorInterface
+     */
+    public function getConfigService()
+    {
+        if ($this->configService) {
+            return $this->configService;
+        }
+
+        if ($this->getServiceLocator()->has('Matryoshka\Scafolding\Service\Config\Config')) {
+            $this->configService = $this->getServiceLocator()->get('Matryoshka\Scafolding\Service\Config\Config');
+            return $this->configService;
+        }
+
+        throw new RuntimeException(
+            sprintf('Service %s must be se on service locator', 'Matryoshka\Scafolding\Service\Config\Config')
         );
     }
 } 

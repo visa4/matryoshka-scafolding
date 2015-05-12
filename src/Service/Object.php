@@ -8,8 +8,6 @@
 namespace Matryoshka\Scafolding\Service;
 
 use Matryoshka\Scafolding\Code\Generator\InterfaceGenerator;
-use Matryoshka\Scafolding\Exception\InvalidArgumentException;
-use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Oop\ResourceTrait;
 use Matryoshka\Scafolding\Oop\Utils;
 use Zend\Code\Generator\ClassGenerator;

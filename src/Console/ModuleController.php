@@ -87,7 +87,6 @@ class ModuleController extends AbstractConsoleController
         // Log
         ($verbose) ? $this->infoMessage('Module.php created') : '';
 
-        var_dump(get_class( $this->getEntityService()));
         $this->console->setColor(ColorInterface::BLUE);
         $this->getEntityService()->settingFromPrompt();
         $this->console->setColor(ColorInterface::RESET);
@@ -96,6 +95,7 @@ class ModuleController extends AbstractConsoleController
         //$this->getHydratorService()->settingFromPrompt(); // TODO to add strategy
         $this->getHydratorService()->generate($this->hydratorFolder);
 
+        $this->getConfigService()->generate($this->configFolder);
         die();
         /*
         $HydratorClass = Char::prompt( 'Do you what to use ClassMethod hydrate or ObjectPropriety hydrate? [c, o]',

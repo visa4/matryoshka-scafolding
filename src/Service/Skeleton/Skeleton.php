@@ -1,5 +1,5 @@
 <?php
-namespace Matryoshka\Scafolding\Service;
+namespace Matryoshka\Scafolding\Service\Skeleton;
 
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlockGenerator;
