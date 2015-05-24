@@ -12,7 +12,7 @@ trait ObjectAwareTrait
      */
     protected $objectService;
     /**
-     * @return ObjectInterface
+     * @return null|ObjectInterface
      */
     public function getObjectService()
     {

@@ -33,32 +33,10 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
 
     public function generateModelConfig($path)
     {
-        $fileConfigName = $this->buildFileNameConfig($this->getObjectService());
-        /*
-        // TODO check if already exist
-        $oldApplicationConfig = include $path . "/config/application.config.php";
+        $fileConfigName = Config::buildFileNameConfig($this->getObjectService());
 
-        if (!in_array($this->getModuleName(), $oldApplicationConfig['modules'])) {
-            $oldApplicationConfig['modules'][] = $this->getModuleName();
-        }
+        $this->checkMatryoshkaAbstractFactory();
 
-        copy($path . "/config/application.config.php",
-            $path . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
-        );
-
-
-        $file->setFilename("application.config.php");
-
-        $docBlock = new DocBlockGenerator();
-        $docBlock->setShortDescription('Test'); // TODO refactor
-        $docBlock->setLongDescription('Test test'); // TODO refactor
-
-        $file->setDocBlock($docBlock);
-
-        $valueGenerator = new ValueGenerator();
-        $valueGenerator->setValue($oldApplicationConfig);
-        $valueGenerator->setArrayDepth(0);
-        */
         $config = [
             'matryoshka-objects' => [
                 $this->getObjectService()->getFullQualifiedClassName() => [
@@ -88,11 +66,24 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
 
     }
 
+    public function checkMatryoshkaAbstractFactory()
+    {
+        $config = $this->getServiceLocator()->get('Config');
+        if ($config['service_manager'] && ($config['service_manager']['abstract_factories'])) {
+
+        }
+
+        // add factory
+        var_dump(__METHOD__);
+        var_dump($config);
+        die();
+    }
+
     /**
      * @param ObjectInterface $objectService
      * @return string
      */
-    protected function buildFileNameConfig(ObjectInterface $objectService)
+    static public function buildFileNameConfig(ObjectInterface $objectService)
     {
         $StringToLowerFilter = new StringToLower();
         return sprintf(

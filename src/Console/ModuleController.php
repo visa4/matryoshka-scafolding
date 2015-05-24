@@ -45,6 +45,8 @@ class ModuleController extends AbstractConsoleController
         $name = $request->getParam('name');
         $path = $request->getParam('path', '.');
 
+        $this->getSkeletonService()->setRootPath($path);
+
         $this->getModelService()->setName($name);
         $this->getEntityService()->setNameSpace(
             Utils::generateNameSpace([
@@ -73,7 +75,7 @@ class ModuleController extends AbstractConsoleController
             return 0;
         }
         // Module exist
-        if ($this->moduleExist()) {
+        if ($this->existModule()) {
             return 0;
         }
         // Create folder
@@ -94,6 +96,10 @@ class ModuleController extends AbstractConsoleController
 
         //$this->getHydratorService()->settingFromPrompt(); // TODO to add strategy
         $this->getHydratorService()->generate($this->hydratorFolder);
+
+
+        $this->getModelService()->settingFromPrompt();
+        $this->getModelService()->generate($this->configFolder);
 
         $this->getConfigService()->generate($this->configFolder);
         die();
@@ -116,11 +122,11 @@ class ModuleController extends AbstractConsoleController
     /**
      * @return bool
      */
-    protected function moduleExist()
+    protected function existModule()
     {
         // Module exist
         try{
-            if ($this->getSkeletonService()->moduleExist()) {
+            if ($this->getSkeletonService()->existModule()) {
                 $this->errorMessage('Impossible create folders skeleton, please control permission');
                 return true;
             }
@@ -138,11 +144,11 @@ class ModuleController extends AbstractConsoleController
     protected function createSkeletonFolders($path)
     {
         $isFoldersSkeletonCreated =
-            ($this->configFolder = $this->getSkeletonService()->generateConfigFolder($path)) &&
-            ($this->srcFolder = $this->getSkeletonService()->generateSrcFolder($path)) &&
-            ($this->modelFolder = $this->getSkeletonService()->generateModelFolder($path, $this->getEntityService()->getName())) &&
-            ($this->entityFolder = $this->getSkeletonService()->generateEntityFolder($path, $this->getEntityService()->getName())) &&
-            ($this->hydratorFolder = $this->getSkeletonService()->generateHydratorFolder($path, $this->getEntityService()->getName()));
+            ($this->configFolder = $this->getSkeletonService()->generateConfigFolder()) &&
+            ($this->srcFolder = $this->getSkeletonService()->generateSrcFolder()) &&
+            ($this->modelFolder = $this->getSkeletonService()->generateModelFolder($this->getEntityService()->getName())) &&
+            ($this->entityFolder = $this->getSkeletonService()->generateEntityFolder($this->getEntityService()->getName())) &&
+            ($this->hydratorFolder = $this->getSkeletonService()->generateHydratorFolder($this->getEntityService()->getName()));
 
         if (!$isFoldersSkeletonCreated) {
             // FIXME remove folder

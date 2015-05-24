@@ -13,7 +13,7 @@ namespace Matryoshka\Scafolding\Service\Hydrator;
 interface HydratorAwareInterface
 {
     /**
-     * @return HydratorInterface
+     * @return null|HydratorInterface
      */
     public function getHydratorService();
 

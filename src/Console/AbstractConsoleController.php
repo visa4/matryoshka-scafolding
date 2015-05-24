@@ -98,7 +98,7 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
     }
 
     /**
-     * @return EntityInterface
+     * @return ModelInterface
      */
     public function getModelService()
     {

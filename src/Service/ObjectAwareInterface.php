@@ -8,7 +8,7 @@ namespace Matryoshka\Scafolding\Service;
 interface ObjectAwareInterface
 {
     /**
-     * @return ObjectInterface
+     * @return null|ObjectInterface
      */
     public function getObjectService();
 

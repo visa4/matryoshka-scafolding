@@ -16,6 +16,7 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
 class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
+    use SkeletonTrait;
 
     const DEFAULT_MODULE_NAME = 'MatryoshkaModel';
 
@@ -27,10 +28,11 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateConfigFolder($path)
+    public function generateConfigFolder()
     {
-        $path = $path . "/module/" . $this->getModuleName() . "/config";
+        $path = $this->getRootPath() . "/module/" . $this->getModuleName() . "/config";
         if (is_dir($path) || mkdir($path, 0777, true)) {
+            $this->setConfigFolder($path);
             return $path;
         }
         return false;
@@ -39,11 +41,12 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateSrcFolder($path)
+    public function generateSrcFolder()
     {
-        $path = $path . "/module/" . $this->getModuleName() . "/src";
+        $path = $this->getRootPath() . "/module/" . $this->getModuleName() . "/src";
 
         if (is_dir($path) || mkdir($path, 0777, true)) {
+            $this->setSrcFolder($path);
             return $path;
         }
         return false;
@@ -52,10 +55,11 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateModelFolder($path, $entityName)
+    public function generateModelFolder($entityName)
     {
-        $path = $path . "/module/" . $this->getModuleName() . "/src/" . $entityName;
+        $path = $this->getRootPath() . "/module/" . $this->getModuleName() . "/src/" . $entityName;
         if (is_dir($path) || mkdir($path, 0777, true)) {
+            $this->setModelFolder($path);
             return $path;
         }
         return false;
@@ -64,10 +68,11 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateEntityFolder($path, $entityName)
+    public function generateEntityFolder($entityName)
     {
-        $path = $path . "/module/" . $this->getModuleName() . "/src/" . $entityName . '/Entity';
+        $path = $this->getRootPath() . "/module/" . $this->getModuleName() . "/src/" . $entityName . '/Entity';
         if (is_dir($path) || mkdir($path, 0777, true)) {
+            $this->setEntityFolder($path);
             return $path;
         }
         return false;
@@ -76,10 +81,11 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateHydratorFolder($path, $entityName)
+    public function generateHydratorFolder($entityName)
     {
-        $path = $path . "/module/" . $this->getModuleName() . "/src/" . $entityName . '/Hydrator';
+        $path = $this->getRootPath() . "/module/" . $this->getModuleName() . "/src/" . $entityName . '/Hydrator';
         if (is_dir($path) || mkdir($path, 0777, true)) {
+            $this->setHydratorFolder($path);
             return $path;
         }
         return false;
@@ -88,7 +94,7 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     /**
      * @inheritdoc
      */
-    public function generateModuleClass($path)
+    public function generateModuleClass()
     {
         // TODO check if already exist
         $class = new ClassGenerator();
@@ -116,20 +122,20 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
         $file = new FileGenerator();
         $file->setClass($class);
 
-        return file_put_contents($path . "/module/" . $this->getModuleName() . "/Module.php", $file->generate());
+        return file_put_contents($this->getRootPath() . "/module/" . $this->getModuleName() . "/Module.php", $file->generate());
     }
 
-    public function generateApplicationConfig($path)
+    public function generateApplicationConfig()
     {
         // TODO check if already exist
-        $oldApplicationConfig = include $path . "/config/application.config.php";
+        $oldApplicationConfig = include $this->getRootPath() . "/config/application.config.php";
 
         if (!in_array($this->getModuleName(), $oldApplicationConfig['modules'])) {
             $oldApplicationConfig['modules'][] = $this->getModuleName();
         }
 
-        copy($path . "/config/application.config.php",
-            $path . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
+        copy($this->getRootPath() . "/config/application.config.php",
+            $this->getRootPath() . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
         );
 
         $file = new FileGenerator();
@@ -148,13 +154,13 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
         $file->setBody("return " . $valueGenerator->generate() . ";");
 
 
-        return file_put_contents($path . "/config/" . $file->getFilename(), $file->generate());
+        return file_put_contents($this->getRootPath() . "/config/" . $file->getFilename(), $file->generate());
     }
 
     /**
      * @inheritdoc
      */
-    public function moduleExist()
+    public function existModule()
     {
         $sm = $this->getServiceLocator();
         try{
@@ -172,11 +178,59 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
     }
 
     /**
+     * @return bool
+     */
+    public function existConfigGlobalFile()
+    {
+        $file = $this->getRootPath() . DIRECTORY_SEPARATOR .
+            'config' . DIRECTORY_SEPARATOR .
+            'autoload' . DIRECTORY_SEPARATOR .
+            'global.php';
+        if (file_exists($file)) {
+            return true;
+        }
+
+        $file = $this->getRootPath() . DIRECTORY_SEPARATOR . 'global.php';
+        if (file_exists($file)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getConfigGlobalFile()
+    {
+        if ($this->configGlobalFile) {
+            return $this->configGlobalFile;
+        }
+
+        $file = $this->getRootPath() . DIRECTORY_SEPARATOR .
+            'config' . DIRECTORY_SEPARATOR .
+            'autoload' . DIRECTORY_SEPARATOR .
+            'global.php';
+        if (file_exists($file)) {
+            $this->configGlobalFile = $file;
+            return $this->configGlobalFile;
+        }
+
+        $file =  $this->getRootPath() . DIRECTORY_SEPARATOR . 'global.php';
+        if (file_exists($file)) {
+            $this->configGlobalFile = $file;
+            return $this->configGlobalFile;
+        }
+
+        return null;
+    }
+
+    /**
      * @inheritdoc
      */
-    public function isZf2Application($path)
+    public function isZf2Application()
     {
-        return !file_exists($path . "/module") || !file_exists($path . "/config/application.config.php");
+        return !file_exists($this->getRootPath() . "/module") || !file_exists($this->getRootPath() . "/config/application.config.php");
     }
 
     /**

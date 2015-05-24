@@ -15,67 +15,105 @@ interface SkeletonInterface
     /**
      * Return string path in create the folder false if cant create folder
      *
-     * @param $path
      * @return string|bool
      */
-    public function generateConfigFolder($path);
+    public function generateConfigFolder();
 
     /**
      * Return string path in create the folder false if cant create folder
      *
-     * @param $path
      * @return string|bool
      */
-    public function generateSrcFolder($path);
+    public function generateSrcFolder();
 
     /**
      * Return string path in create the folder false if cant create folder
      *
-     * @param $path
      * @param $entityName
      * @return string|bool
      */
-    public function generateModelFolder($path, $entityName);
+    public function generateModelFolder($entityName);
 
     /**
      * Return string path in create the folder false if cant create folder
      *
-     * @param $path
      * @param $entityName
      * @return string|bool
      */
-    public function generateEntityFolder($path, $entityName);
+    public function generateEntityFolder($entityName);
 
     /**
      * Return string path in create the folder false if cant create folder
      *
-     * @param $path
+
      * @param $entityName
      * @return string|bool
      */
-    public function generateHydratorFolder($path, $entityName);
+    public function generateHydratorFolder($entityName);
 
     /**
-     * @param $path
      * @return bool|int
      */
-    public function generateModuleClass($path);
+    public function generateModuleClass();
 
     /**
-     * @param $path
      * @return bool|int
      */
-    public function generateApplicationConfig($path);
+    public function generateApplicationConfig();
 
     /**
      * @return bool
      */
-    public function moduleExist();
+    public function existModule();
 
     /**
-     * @param $path
      * @return bool
      */
-    public function isZf2Application($path);
+    public function existConfigGlobalFile();
 
+    /**
+     * @return null|string
+     */
+    public function getConfigGlobalFile();
+
+    /**
+     * @return bool
+     */
+    public function isZf2Application();
+
+    /**
+     * @return string
+     */
+    public function getRootPath();
+
+    /**
+     * @param string $rootPath
+     * @return $this
+     */
+    public function setRootPath($rootPath);
+
+    /**
+     * @return string
+     */
+    public function getConfigFolder();
+
+    /**
+     * @return string
+     */
+    public function getEntityFolder();
+
+    /**
+     * @return string
+     */
+    public function getModelFolder();
+
+    /**
+     * @return string
+     */
+    public function getSrcFolder();
+
+    /**
+     * @return string
+     */
+    public function getHydratorFolder();
 } 

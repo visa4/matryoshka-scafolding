@@ -18,7 +18,7 @@ trait HydratorAwareTrait
     protected $hydratorService;
 
     /**
-     * @return HydratorInterface
+     * @return null|HydratorInterface
      */
     public function getHydratorService()
     {

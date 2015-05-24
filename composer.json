@@ -7,7 +7,8 @@
         "zendframework/zendframework": "~2.3",
         "matryoshka-model/matryoshka": "0.6.0",
         "matryoshka-model/mongo-wrapper": "0.6.0",
-        "matryoshka-model/rest-wrapper": "0.6.0"
+        "matryoshka-model/rest-wrapper": "0.6.0",
+        "matryoshka-model/zf2-matryoshka-module": "0.6.0"
 
     },
     "require-dev": {
