@@ -7,7 +7,10 @@ use Matryoshka\Scafolding\Oop\ResourceInterface;
 /**
  * Interface EntityInterface
  */
-interface ObjectInterface extends ResourceInterface, GeneratorInterface, PromptSettingInterface
+interface ObjectInterface extends
+    ResourceInterface,
+    GeneratorInterface,
+    PromptSettingInterface
 {
     const GET_METHOD = 'get';
     const SET_METHOD = 'set';

@@ -36,7 +36,7 @@ class ModuleController extends AbstractConsoleController
      */
     protected $hydratorFolder;
 
-    public function createModuleAction()
+    public function createModelAction()
     {
         /* @var $request Request */
         $request = $this->getRequest();
@@ -44,6 +44,34 @@ class ModuleController extends AbstractConsoleController
         $verbose = $request->getParam('verbose') || $request->getParam('v');
         $name = $request->getParam('name');
         $path = $request->getParam('path', '.');
+
+        // Log
+        ($verbose) ? $this->infoMessage('Start create skeleton') : '';
+
+        // Is zf2 application
+        if ($this->getSkeletonService()->isZf2Application($path)) {
+            $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
+            return 0;
+        }
+        // Module exist
+        if ($this->existModule()) {
+            return 0;
+        }
+        // Create folder
+        if (!$this->createSkeletonFolders($path)) {
+            return 0;
+        }
+
+        $this->getConfigService()->setRootApplicationFolder(
+          $this->getSkeletonService()->getRootPath()
+        );
+
+        $this->getConfigService()->setRootApplicationFolder(
+            $this->getSkeletonService()->getModelFolder()
+        );
+
+        // Log
+        ($verbose) ? $this->infoMessage('Folders created') : '';
 
         $this->getSkeletonService()->setRootPath($path);
 
@@ -66,28 +94,9 @@ class ModuleController extends AbstractConsoleController
         );
         $this->getHydratorService()->setName($name);
 
+        //$this->getSkeletonService()->generateModuleClass($path);
         // Log
-        ($verbose) ? $this->infoMessage('Start create skeleton') : '';
-
-        // Is zf2 application
-        if ($this->getSkeletonService()->isZf2Application($path)) {
-            $this->errorMessage(sprintf('Path %s not contain a ZF2 application', $path));
-            return 0;
-        }
-        // Module exist
-        if ($this->existModule()) {
-            return 0;
-        }
-        // Create folder
-        if (!$this->createSkeletonFolders($path)) {
-            return 0;
-        }
-        // Log
-        ($verbose) ? $this->infoMessage('Folders created') : '';
-
-        $this->getSkeletonService()->generateModuleClass($path);
-        // Log
-        ($verbose) ? $this->infoMessage('Module.php created') : '';
+       // ($verbose) ? $this->infoMessage('Module.php created') : '';
 
         $this->console->setColor(ColorInterface::BLUE);
         $this->getEntityService()->settingFromPrompt();
@@ -101,22 +110,10 @@ class ModuleController extends AbstractConsoleController
         $this->getModelService()->settingFromPrompt();
         $this->getModelService()->generate($this->configFolder);
 
-        $this->getConfigService()->generate($this->configFolder);
-        die();
-        /*
-        $HydratorClass = Char::prompt( 'Do you what to use ClassMethod hydrate or ObjectPropriety hydrate? [c, o]',
-            'co',
-            true,
-            false,
-            false);
 
-        $HydrateStrategy = Char::prompt( 'Do you what to use undescore hydrate strategy o camelcase hydrate strategy? [u, c]',
-            'uc',
-            true,
-            false,
-            false);
-*/
-        $this->getSkeletonService()->generateApplicationConfig($path);
+        //$this->getConfigService()->generate($this->configFolder);
+        $this->infoMessage('End');
+        die();
     }
 
     /**

@@ -136,7 +136,7 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
     }
 
     /**
-     * @return HydratorInterface
+     * @return ConfigInterface
      */
     public function getConfigService()
     {

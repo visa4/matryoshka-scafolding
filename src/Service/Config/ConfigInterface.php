@@ -10,8 +10,24 @@ use Matryoshka\Scafolding\Service\ObjectAwareInterface;
  */
 interface ConfigInterface extends
     ObjectAwareInterface,
-    HydratorAwareInterface,
-    GeneratorInterface
+    HydratorAwareInterface
 {
     const TEMPLATE_FILE_NAME_CONFIG = '%s.config.php';
+
+    /**
+     * @return $this
+     */
+    public function generate();
+
+    /**
+     * @param string $rootApplicationFolder
+     * @return $this
+     */
+    public function setRootApplicationFolder($rootApplicationFolder);
+
+    /**
+     * @param string $rootModuleFolder
+     * @return $this
+     */
+    public function setRootModuleFolder($rootModuleFolder);
 } 

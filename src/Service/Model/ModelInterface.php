@@ -3,11 +3,15 @@ namespace Matryoshka\Scafolding\Service\Model;
 
 use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Service\Model\Adapter\AdapterAwareInterface;
+use Matryoshka\Scafolding\Service\PromptSettingInterface;
 
 /**
  * Interface ModelInterface
  */
-interface ModelInterface extends GeneratorInterface, AdapterAwareInterface
+interface ModelInterface extends
+    GeneratorInterface,
+    AdapterAwareInterface,
+    PromptSettingInterface
 {
     /**
      * @param $path

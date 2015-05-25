@@ -1,6 +1,7 @@
 <?php
 namespace Matryoshka\Scafolding\Service\Skeleton;
 
+use Matryoshka\Scafolding\Service\Model\ModelNameAwareTrait;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\FileGenerator;
@@ -17,7 +18,7 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
     use SkeletonTrait;
-
+    use ModelNameAwareTrait;
     const DEFAULT_MODULE_NAME = 'MatryoshkaModel';
 
     /**
@@ -89,72 +90,6 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
             return $path;
         }
         return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function generateModuleClass()
-    {
-        // TODO check if already exist
-        $class = new ClassGenerator();
-        $class->setName('Module');
-        $class->setNamespaceName($this->getModuleName());
-
-        // TODO docBlock
-        $getConfigMethod = new MethodGenerator();
-        $getConfigMethod->setName('getConfig');
-        $getConfigMethod->setBody("return include __DIR__ . '/config/module.config.php';");
-
-        $getAutoloaderConfigMethod = new MethodGenerator();
-        $getAutoloaderConfigMethod->setName('getAutoloaderConfig');
-        $getAutoloaderConfigMethod->setBody("return ['Zend\Loader\StandardAutoloader' => [
-    'namespaces' => [
-        __NAMESPACE__ => __DIR__ . '/src/',
-        ],
-    ],
-];"
-        );
-
-
-        $class->addMethods([$getConfigMethod, $getAutoloaderConfigMethod]);
-
-        $file = new FileGenerator();
-        $file->setClass($class);
-
-        return file_put_contents($this->getRootPath() . "/module/" . $this->getModuleName() . "/Module.php", $file->generate());
-    }
-
-    public function generateApplicationConfig()
-    {
-        // TODO check if already exist
-        $oldApplicationConfig = include $this->getRootPath() . "/config/application.config.php";
-
-        if (!in_array($this->getModuleName(), $oldApplicationConfig['modules'])) {
-            $oldApplicationConfig['modules'][] = $this->getModuleName();
-        }
-
-        copy($this->getRootPath() . "/config/application.config.php",
-            $this->getRootPath() . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
-        );
-
-        $file = new FileGenerator();
-        $file->setFilename("application.config.php");
-
-        $docBlock = new DocBlockGenerator();
-        $docBlock->setShortDescription('Test'); // TODO refactor
-        $docBlock->setLongDescription('Test test'); // TODO refactor
-
-        $file->setDocBlock($docBlock);
-
-        $valueGenerator = new ValueGenerator();
-        $valueGenerator->setValue($oldApplicationConfig);
-        $valueGenerator->setArrayDepth(0);
-
-        $file->setBody("return " . $valueGenerator->generate() . ";");
-
-
-        return file_put_contents($this->getRootPath() . "/config/" . $file->getFilename(), $file->generate());
     }
 
     /**
@@ -242,15 +177,5 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
             $this->moduleName = self::DEFAULT_MODULE_NAME;
         }
         return $this->moduleName;
-    }
-
-    /**
-     * @param $moduleName
-     * @return $this
-     */
-    public function setModuleName($moduleName)
-    {
-        $this->moduleName = $moduleName;
-        return $this;
     }
 } 

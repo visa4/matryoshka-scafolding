@@ -2,16 +2,13 @@
 
 namespace Matryoshka\Scafolding\Service\Skeleton;
 
+use Matryoshka\Scafolding\Service\Model\ModelNameInterface;
+
 /**
  * Interface SkeletonInterface
  */
-interface SkeletonInterface
+interface SkeletonInterface extends ModelNameInterface
 {
-    /**
-     * @return string
-     */
-    public function getModuleName();
-
     /**
      * Return string path in create the folder false if cant create folder
      *
@@ -45,21 +42,10 @@ interface SkeletonInterface
     /**
      * Return string path in create the folder false if cant create folder
      *
-
      * @param $entityName
      * @return string|bool
      */
     public function generateHydratorFolder($entityName);
-
-    /**
-     * @return bool|int
-     */
-    public function generateModuleClass();
-
-    /**
-     * @return bool|int
-     */
-    public function generateApplicationConfig();
 
     /**
      * @return bool

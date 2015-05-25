@@ -6,10 +6,10 @@ return  [
                 // Console routes go here
                 'console-model-create' => [
                     'options' => [
-                        'route'     => 'create module [--verbose|-v] <name> [<path>]',
+                        'route'     => 'create model <name> [<path>] [--verbose|-v]',
                         'defaults'  => [
                             'controller'    => 'Matryoshka\Scafolding\Console\Module',
-                            'action'        => 'create-module',
+                            'action'        => 'create-model',
                         ]
                     ]
                 ]
