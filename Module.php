@@ -35,7 +35,7 @@ class Module implements InputFilterProviderInterface
     {
         return [
             'Scafolding usage:',
-            'create module [--verbose|-v] <name>' =>  'Create a new matryoshka model module'
+            'create model <name> [--verbose|-v]' =>  'Create a new matryoshka model'
         ];
     }
 

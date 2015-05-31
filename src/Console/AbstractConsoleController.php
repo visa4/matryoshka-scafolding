@@ -102,7 +102,7 @@ class AbstractConsoleController extends Zf2AbstractConsoleController
      */
     public function getModelService()
     {
-        if ($this->entityService) {
+        if ($this->modelService) {
             return $this->modelService;
         }
 

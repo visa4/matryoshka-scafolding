@@ -3,6 +3,7 @@ namespace Matryoshka\Scafolding\Service\Config;
 
 use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Service\Hydrator\HydratorAwareInterface;
+use Matryoshka\Scafolding\Service\Model\ModelNameInterface;
 use Matryoshka\Scafolding\Service\ObjectAwareInterface;
 
 /**
@@ -10,7 +11,8 @@ use Matryoshka\Scafolding\Service\ObjectAwareInterface;
  */
 interface ConfigInterface extends
     ObjectAwareInterface,
-    HydratorAwareInterface
+    HydratorAwareInterface,
+    ModelNameInterface
 {
     const TEMPLATE_FILE_NAME_CONFIG = '%s.config.php';
 
@@ -26,8 +28,8 @@ interface ConfigInterface extends
     public function setRootApplicationFolder($rootApplicationFolder);
 
     /**
-     * @param string $rootModuleFolder
+     * @param string $configModuleFolder
      * @return $this
      */
-    public function setRootModuleFolder($rootModuleFolder);
+    public function setConfigModuleFolder($configModuleFolder);
 } 

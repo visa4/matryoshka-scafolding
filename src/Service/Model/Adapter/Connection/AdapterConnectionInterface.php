@@ -6,6 +6,7 @@
 namespace Matryoshka\Scafolding\Service\Model\Adapter\Connection;
 
 use Matryoshka\Scafolding\Oop\GeneratorInterface;
+use Matryoshka\Scafolding\Service\ConfigExistingInterface;
 use Matryoshka\Scafolding\Service\Model\Adapter\ServiceNameInterface;
 use Matryoshka\Scafolding\Service\PromptSettingInterface;
 
@@ -15,7 +16,8 @@ use Matryoshka\Scafolding\Service\PromptSettingInterface;
 interface AdapterConnectionInterface extends
     PromptSettingInterface,
     ServiceNameInterface,
-    GeneratorInterface
+    GeneratorInterface,
+    ConfigExistingInterface
 {
 
 } 

@@ -20,7 +20,6 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  */
 class Model implements
     ModelInterface,
-    PromptSettingInterface,
     ServiceLocatorAwareInterface
 {
     use AdapterAwareTrait;
@@ -68,34 +67,9 @@ class Model implements
 
         $this->chooseAdapterFromPrompt($typeAdapter);
 
-        $message = 'Do you want to use a connection already existing? [y,n]';
-        $connectionExist = Char::prompt($message, 'yn', true, false, false);
-        if ($connectionExist == 'y') {
-            $nameService = Line::prompt('Enter name service:', true, 100);
-            // TODO check if exist service
-            $this->getAdapter()->getAdapterConnection()->setServiceName($nameService);
-        } else {
-            $this->getAdapter()->getAdapterConnection()->settingFromPrompt();
-        }
+        $this->getAdapter()->settingFromPrompt();
 
-        $message = 'Do you want to use a data gateway already existing? [y,n]';
-        $dataGatewayExist = Char::prompt($message, 'yn', true, false, false);
-        if ($dataGatewayExist == 'y') {
-            $nameService = Line::prompt('Enter name service:', true, 100);
-            // TODO check if exist service
-            $this->getAdapter()->setServiceName($nameService);
-        } else {
-            $this->getAdapter()->settingFromPrompt();
-        }
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function generate($path)
-    {
-        $this->getAdapter()->generate($path);
     }
 
     protected function chooseAdapterFromPrompt($input)

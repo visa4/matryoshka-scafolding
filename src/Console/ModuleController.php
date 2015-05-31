@@ -45,6 +45,9 @@ class ModuleController extends AbstractConsoleController
         $name = $request->getParam('name');
         $path = $request->getParam('path', '.');
 
+        $this->getSkeletonService()->setRootPath($path);
+        $this->getConfigService()->setModuleName($this->getSkeletonService()->getModuleName());
+
         // Log
         ($verbose) ? $this->infoMessage('Start create skeleton') : '';
 
@@ -61,19 +64,12 @@ class ModuleController extends AbstractConsoleController
         if (!$this->createSkeletonFolders($path)) {
             return 0;
         }
-
-        $this->getConfigService()->setRootApplicationFolder(
-          $this->getSkeletonService()->getRootPath()
-        );
-
-        $this->getConfigService()->setRootApplicationFolder(
-            $this->getSkeletonService()->getModelFolder()
-        );
+        // Settings path
+        $this->getConfigService()->setRootApplicationFolder($this->getSkeletonService()->getRootPath());
+        $this->getConfigService()->setConfigModuleFolder($this->getSkeletonService()->getConfigFolder());
 
         // Log
         ($verbose) ? $this->infoMessage('Folders created') : '';
-
-        $this->getSkeletonService()->setRootPath($path);
 
         $this->getModelService()->setName($name);
         $this->getEntityService()->setNameSpace(
@@ -99,19 +95,22 @@ class ModuleController extends AbstractConsoleController
        // ($verbose) ? $this->infoMessage('Module.php created') : '';
 
         $this->console->setColor(ColorInterface::BLUE);
-        $this->getEntityService()->settingFromPrompt();
+       // $this->getEntityService()->settingFromPrompt();
         $this->console->setColor(ColorInterface::RESET);
-        $this->getEntityService()->generate($this->entityFolder);
+       // $this->getEntityService()->generate($this->entityFolder);
 
         //$this->getHydratorService()->settingFromPrompt(); // TODO to add strategy
         $this->getHydratorService()->generate($this->hydratorFolder);
 
 
         $this->getModelService()->settingFromPrompt();
-        $this->getModelService()->generate($this->configFolder);
+        //$this->getModelService()->generate($this->configFolder);
+        $this->getModelService()->getAdapter()->generate($this->configFolder);
+        if ($this->getModelService()->getAdapter()->getAdapterConnection()) {
+            $this->getModelService()->getAdapter()->getAdapterConnection()->generate($path);
+        }
 
-
-        //$this->getConfigService()->generate($this->configFolder);
+        $this->getConfigService()->generate($this->configFolder);
         $this->infoMessage('End');
         die();
     }

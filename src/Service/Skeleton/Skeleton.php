@@ -165,7 +165,8 @@ class Skeleton implements SkeletonInterface , ServiceLocatorAwareInterface
      */
     public function isZf2Application()
     {
-        return !file_exists($this->getRootPath() . "/module") || !file_exists($this->getRootPath() . "/config/application.config.php");
+        $applicationConfig = $this->getRootPath() . "/config/application.config.php";
+        return !file_exists($applicationConfig);
     }
 
     /**

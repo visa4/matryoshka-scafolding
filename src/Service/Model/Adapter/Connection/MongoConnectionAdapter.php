@@ -2,6 +2,7 @@
 namespace Matryoshka\Scafolding\Service\Model\Adapter\Connection;
 
 use Matryoshka\Scafolding\Oop\GeneratorInterface;
+use Matryoshka\Scafolding\Service\ConfigExistingTrait;
 use Matryoshka\Scafolding\Service\Model\Adapter\ServiceNameTrait;
 use Zend\Console\Prompt\Line;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -14,6 +15,14 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
 {
     use ServiceLocatorAwareTrait;
     use ServiceNameTrait;
+    use ConfigExistingTrait;
+
+    const CONFIG_KEY = 'mongodb';
+    const CONFIG_KEY_DATABASE = 'database';
+    const CONFIG_KEY_HOSTS = 'hosts';
+    const CONFIG_KEY_PASSWORD = 'password';
+    const CONFIG_KEY_USERNAME = 'username';
+
     /**
      * @var string
      */
@@ -22,7 +31,7 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
     /**
      * @var string
      */
-    protected $hosts;
+    protected $hosts = '127.0.0.1:27017';
 
     /**
      * @var string
@@ -33,6 +42,24 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
      * @var string
      */
     protected $password;
+
+    /**
+     * @return string
+     */
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * @param string $database
+     * @return $this
+     */
+    public function setDatabase($database)
+    {
+        $this->database = $database;
+        return $this;
+    }
 
     /**
      * @return string
@@ -97,7 +124,7 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
         $this->setServiceName($serviceName);
 
         $database = Line::prompt('Enter name database:', false, 100);
-        $this->setPassword($database);
+        $this->setDatabase($database);
 
         $hosts= Line::prompt('Enter hosts:', true, 200);
         $this->setHosts($hosts);
@@ -105,7 +132,7 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
         $username = Line::prompt('Enter username:', true, 100);
         $this->setUsername($username);
 
-        $password = Line::prompt('Enter name database:', true, 100);
+        $password = Line::prompt('Enter name password:', true, 100);
         $this->setPassword($password);
     }
 
@@ -115,6 +142,29 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
      */
     public function generate($path)
     {
-        // TODO: Implement generate() method.
+        if (!$this->isConfigExisting()) {
+           return $this;
+        }
+
+        $config = [self::CONFIG_KEY => [
+            $this->getServiceName() => [
+                self::CONFIG_KEY_DATABASE => $this->getDatabase()]
+            ]
+        ];
+
+        if ($this->getHosts()) {
+            $config[self::CONFIG_KEY][ $this->getServiceName()][self::CONFIG_KEY_HOSTS] = $this->getHosts();
+        }
+
+        if ($this->getPassword()) {
+            $config[self::CONFIG_KEY][ $this->getServiceName()][self::CONFIG_KEY_PASSWORD] = $this->getPassword();
+        }
+
+        if ($this->getUsername()) {
+            $config[self::CONFIG_KEY][ $this->getServiceName()][self::CONFIG_KEY_USERNAME] = $this->getUsername();
+        }
+        var_dump('Connection config');
+        var_dump($path);
+        var_dump($config);
     }
 } 

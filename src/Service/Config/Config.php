@@ -2,6 +2,7 @@
 namespace Matryoshka\Scafolding\Service\Config;
 
 use Matryoshka\Scafolding\Service\Hydrator\HydratorAwareTrait;
+use Matryoshka\Scafolding\Service\Model\ModelNameAwareTrait;
 use Matryoshka\Scafolding\Service\ObjectAwareTrait;
 use Matryoshka\Scafolding\Service\ObjectInterface;
 use Zend\Code\Generator\ClassGenerator;
@@ -22,6 +23,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
     use ServiceLocatorAwareTrait;
     use HydratorAwareTrait;
     use ObjectAwareTrait;
+    use ModelNameAwareTrait;
 
     /**
      * @var string
@@ -31,7 +33,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
     /**
      * @var string
      */
-    protected $rootModuleFolder;
+    protected $configModuleFolder;
 
     /**
      * @inheritdoc
@@ -71,7 +73,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
         $file = new FileGenerator();
         $file->setBody("return " . $valueGenerator->generate() . ";");
 
-        $path = $this->getRootModuleFolder() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR .  $fileConfigName;
+        $path = $this->getConfigModuleFolder() . DIRECTORY_SEPARATOR .  $fileConfigName;
         return file_put_contents($path, $file->generate());
     }
 
@@ -119,8 +121,8 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
             $oldApplicationConfig['modules'][] = $this->getModuleName();
         }
 
-        copy($this->getRootPath() . "/config/application.config.php",
-            $this->getRootPath() . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
+        copy($this->getRootApplicationFolder() . "/config/application.config.php",
+            $this->getRootApplicationFolder() . sprintf("/config/application.config.%s", (new \DateTime())->getTimestamp())
         );
 
         $file = new FileGenerator();
@@ -138,8 +140,8 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
 
         $file->setBody("return " . $valueGenerator->generate() . ";");
 
-
-        return file_put_contents($this->getRootPath() . "/config/" . $file->getFilename(), $file->generate());
+        $path = $this->getRootApplicationFolder() . "/config/" . $file->getFilename();
+        return file_put_contents($path, $file->generate());
     }
 
     /**
@@ -178,10 +180,11 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
         }
 
         if (!empty($factories)) {
-            $oldGlobalConfig = include $path . "/config/autoload/global.php";
+            $pathApplicationFolder = $this->getRootApplicationFolder() . "/config/autoload/global.php";
+            $oldGlobalConfig = include $pathApplicationFolder;
 
-            copy($path . "/config/autoload/global.php",
-                 $path . sprintf("/config/autoload/global.%s", (new \DateTime())->getTimestamp())
+            copy($pathApplicationFolder,
+                 $this->getRootApplicationFolder() . sprintf("/config/autoload/global.%s", (new \DateTime())->getTimestamp())
             );
 
             $newGlobalConfig = ArrayUtils::merge($oldGlobalConfig, $factories);
@@ -243,18 +246,18 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
     /**
      * @return string
      */
-    public function getRootModuleFolder()
+    public function getConfigModuleFolder()
     {
-        return $this->rootModuleFolder;
+        return $this->configModuleFolder;
     }
 
     /**
-     * @param string $rootModuleFolder
+     * @param string $configModuleFolder
      * @return $this
      */
-    public function setRootModuleFolder($rootModuleFolder)
+    public function setConfigModuleFolder($configModuleFolder)
     {
-        $this->rootModuleFolder = $rootModuleFolder;
+        $this->configModuleFolder = $configModuleFolder;
         return $this;
     }
 } 

@@ -9,7 +9,6 @@ use Matryoshka\Scafolding\Service\PromptSettingInterface;
  * Interface ModelInterface
  */
 interface ModelInterface extends
-    GeneratorInterface,
     AdapterAwareInterface,
     PromptSettingInterface
 {
