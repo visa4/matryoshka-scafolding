@@ -102,4 +102,15 @@ interface SkeletonInterface extends ModelNameInterface
      * @return string
      */
     public function getHydratorFolder();
+
+    /**
+     * @return string
+     */
+    public function getApplicationConfigPath();
+
+    /**
+     * @param string $applicationConfigPath
+     * @return $this
+     */
+    public function setApplicationConfigPath($applicationConfigPath);
 } 

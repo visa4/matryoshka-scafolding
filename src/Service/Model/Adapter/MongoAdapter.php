@@ -104,7 +104,7 @@ class MongoAdapter implements AdapterInterface, ServiceLocatorAwareInterface
      */
     public function generate($path)
     {
-        if (!$this->isConfigExisting()) {
+        if ($this->isConfigExisting()) {
             return $this;
         }
 
@@ -113,9 +113,6 @@ class MongoAdapter implements AdapterInterface, ServiceLocatorAwareInterface
 
         $config[self::CONFIG_KEY][ $this->getServiceName()][self::CONFIG_KEY_COLLECTION] =
             $this->getCollection();
-        var_dump('Model config');
-        var_dump($path);
-        var_dump($config);
     }
 
 

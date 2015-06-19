@@ -1,12 +1,16 @@
 <?php
 namespace Matryoshka\Scafolding\Service\Model\Adapter\Connection;
 
+use Matryoshka\Scafolding\Exception\RuntimeException;
 use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Service\ConfigExistingTrait;
 use Matryoshka\Scafolding\Service\Model\Adapter\ServiceNameTrait;
+use Zend\Code\Generator\FileGenerator;
+use Zend\Code\Generator\ValueGenerator;
 use Zend\Console\Prompt\Line;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class MongoConnectionAdapter
@@ -75,7 +79,9 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
      */
     public function setHosts($hosts)
     {
-        $this->hosts = $hosts;
+        if ($hosts) {
+            $this->hosts = $hosts;
+        }
         return $this;
     }
 
@@ -142,7 +148,7 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
      */
     public function generate($path)
     {
-        if (!$this->isConfigExisting()) {
+        if ($this->isConfigExisting()) {
            return $this;
         }
 
@@ -163,8 +169,30 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
         if ($this->getUsername()) {
             $config[self::CONFIG_KEY][ $this->getServiceName()][self::CONFIG_KEY_USERNAME] = $this->getUsername();
         }
-        var_dump('Connection config');
-        var_dump($path);
-        var_dump($config);
+
+        if (!is_file($path)) {
+            $globalConfig = $path . "/config/autoload/global.php";
+
+        } else {
+            $globalConfig = $path;
+        }
+
+        if ($globalConfig) {
+            $oldGlobalConfig = include $globalConfig;
+            $newGlobalConfig = ArrayUtils::merge($oldGlobalConfig, $config);
+
+            $file = new FileGenerator();
+            $file->setFilename("global.php");
+
+            $valueGenerator = new ValueGenerator();
+            $valueGenerator->setValue($newGlobalConfig);
+            $valueGenerator->setArrayDepth(0);
+
+            $file->setBody("return " . $valueGenerator->generate() . ";");
+
+            return file_put_contents($globalConfig, $file->generate());
+        }
+
+        throw new RuntimeException(sprintf('Wrong file config %s', $globalConfig));
     }
 } 

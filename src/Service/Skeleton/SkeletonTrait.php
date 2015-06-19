@@ -23,6 +23,11 @@ trait SkeletonTrait
     /**
      * @var string
      */
+    protected $applicationConfigPath;
+
+    /**
+     * @var string
+     */
     protected $modelFolder;
 
     /**
@@ -174,6 +179,24 @@ trait SkeletonTrait
     public function setConfigGlobalFile($configGlobalFile)
     {
         $this->configGlobalFile = $configGlobalFile;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationConfigPath()
+    {
+        return $this->applicationConfigPath;
+    }
+
+    /**
+     * @param string $applicationConfigPath
+     * @return $this
+     */
+    public function setApplicationConfigPath($applicationConfigPath)
+    {
+        $this->applicationConfigPath = $applicationConfigPath;
         return $this;
     }
 } 

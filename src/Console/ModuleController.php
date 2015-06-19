@@ -90,16 +90,16 @@ class ModuleController extends AbstractConsoleController
         );
         $this->getHydratorService()->setName($name);
 
-        //$this->getSkeletonService()->generateModuleClass($path);
+        $this->getSkeletonService()->generateModuleClass($path);
         // Log
-       // ($verbose) ? $this->infoMessage('Module.php created') : '';
+        ($verbose) ? $this->infoMessage('Module.php created') : '';
 
         $this->console->setColor(ColorInterface::BLUE);
-       // $this->getEntityService()->settingFromPrompt();
+        $this->getEntityService()->settingFromPrompt();
         $this->console->setColor(ColorInterface::RESET);
-       // $this->getEntityService()->generate($this->entityFolder);
+        $this->getEntityService()->generate($this->entityFolder);
 
-        //$this->getHydratorService()->settingFromPrompt(); // TODO to add strategy
+        $this->getHydratorService()->settingFromPrompt(); // TODO to add strategy
         $this->getHydratorService()->generate($this->hydratorFolder);
 
 
