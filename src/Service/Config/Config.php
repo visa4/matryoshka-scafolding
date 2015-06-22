@@ -60,11 +60,13 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
                 ]
             ],
             'matryoshka-models' => [
-                'datagateway'        =>  $this->getModelService()->getAdapter()->getServiceName(),
-                'resultset'          => 'Matryoshka\Model\Wrapper\Mongo\ResultSet\ServiceLocatorStrategyHydratingResultSet', // FIXME da model service
-                'paginator_criteria' => 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria', // FIXME da model service
-                'hydrator'           => $this->getHydratorService()->getFullQualifiedClassName(),
-                'object'             => $this->getObjectService()->getFullQualifiedClassName(),
+                $this->getObjectService()->getName() => [
+                    'datagateway'        =>  $this->getModelService()->getAdapter()->getServiceName(),
+                    'resultset'          => 'Matryoshka\Model\Wrapper\Mongo\ResultSet\ServiceLocatorStrategyHydratingResultSet', // FIXME da model service
+                    'paginator_criteria' => 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria', // FIXME da model service
+                    'hydrator'           => $this->getHydratorService()->getFullQualifiedClassName(),
+                    'object'             => $this->getObjectService()->getFullQualifiedClassName(),
+                ]
             ]
         ];
 
