@@ -193,6 +193,6 @@ class MongoConnectionAdapter implements AdapterConnectionInterface, ServiceLocat
             return file_put_contents($globalConfig, $file->generate());
         }
 
-        throw new RuntimeException(sprintf('Wrong file config %s', $globalConfig));
+        throw new RuntimeException(sprintf('Wrong file config for model connection adapter %s', $globalConfig));
     }
 } 

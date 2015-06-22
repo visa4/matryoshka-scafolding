@@ -44,7 +44,7 @@ class ModuleController extends AbstractConsoleController
         $verbose = $request->getParam('verbose') || $request->getParam('v');
         $name = $request->getParam('name');
         $path = $request->getParam('path', '.');
-
+        // Setting service
         $this->getSkeletonService()->setRootPath($path);
         $this->getConfigService()->setModuleName($this->getSkeletonService()->getModuleName());
         $this->getEntityService()->setName($name);
@@ -104,11 +104,6 @@ class ModuleController extends AbstractConsoleController
 
 
         $this->getModelService()->settingFromPrompt();
-        //$this->getModelService()->generate($this->configFolder);
-        $this->getModelService()->getAdapter()->generate($this->configFolder);
-        if ($this->getModelService()->getAdapter()->getAdapterConnection()) {
-            $this->getModelService()->getAdapter()->getAdapterConnection()->generate($path);
-        }
 
         $this->getConfigService()->generate($this->configFolder);
         $this->infoMessage('End');
@@ -139,7 +134,6 @@ class ModuleController extends AbstractConsoleController
      */
     protected function createSkeletonFolders($path)
     {
-        var_dump($this->getEntityService()->getName());
         $isFoldersSkeletonCreated =
             ($this->configFolder = $this->getSkeletonService()->generateConfigFolder()) &&
             ($this->srcFolder = $this->getSkeletonService()->generateSrcFolder()) &&

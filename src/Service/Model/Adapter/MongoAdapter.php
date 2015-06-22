@@ -1,15 +1,19 @@
 <?php
 namespace Matryoshka\Scafolding\Service\Model\Adapter;
 
+use Matryoshka\Scafolding\Code\Generator\ValueGenerator;
 use Matryoshka\Scafolding\Exception\RuntimeException;
 use Matryoshka\Scafolding\Oop\GeneratorInterface;
+use Matryoshka\Scafolding\Service\Config\Config;
 use Matryoshka\Scafolding\Service\ConfigExistingTrait;
 use Matryoshka\Scafolding\Service\Model\Adapter\Connection\AdapterConnectionAwareTrait;
 use Matryoshka\Scafolding\Service\Model\Adapter\Connection\MongoConnectionAdapter;
+use Zend\Code\Generator\FileGenerator;
 use Zend\Console\Prompt\Char;
 use Zend\Console\Prompt\Line;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class MongoAdapter
@@ -113,6 +117,22 @@ class MongoAdapter implements AdapterInterface, ServiceLocatorAwareInterface
 
         $config[self::CONFIG_KEY][ $this->getServiceName()][self::CONFIG_KEY_COLLECTION] =
             $this->getCollection();
+
+        if (is_file($path)) {
+            $oldGlobalConfig = include $path;
+            $newGlobalConfig = ArrayUtils::merge($oldGlobalConfig, $config);
+            $file = new FileGenerator();
+
+            $valueGenerator = new ValueGenerator();
+            $valueGenerator->setValue($newGlobalConfig);
+            $valueGenerator->setArrayDepth(0);
+
+            $file->setBody("return " . $valueGenerator->generate() . ";");
+
+            return file_put_contents($path, $file->generate());
+        }
+
+        throw new RuntimeException(sprintf('Wrong file config for module adapter %s', $path));
     }
 
 

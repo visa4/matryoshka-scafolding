@@ -2,6 +2,7 @@
 namespace Matryoshka\Scafolding\Service\Config;
 
 use Matryoshka\Scafolding\Service\Hydrator\HydratorAwareTrait;
+use Matryoshka\Scafolding\Service\Model\ModelAwareTrait;
 use Matryoshka\Scafolding\Service\Model\ModelNameAwareTrait;
 use Matryoshka\Scafolding\Service\ObjectAwareTrait;
 use Matryoshka\Scafolding\Service\ObjectInterface;
@@ -24,6 +25,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
     use HydratorAwareTrait;
     use ObjectAwareTrait;
     use ModelNameAwareTrait;
+    use ModelAwareTrait;
 
     /**
      * @var string
@@ -74,7 +76,15 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
         $file->setBody("return " . $valueGenerator->generate() . ";");
 
         $path = $this->getConfigModuleFolder() . DIRECTORY_SEPARATOR .  $fileConfigName;
-        return file_put_contents($path, $file->generate());
+
+        file_put_contents($path, $file->generate());
+
+        $this->getModelService()->getAdapter()->generate($path);
+        if ($this->getModelService()->getAdapter()->getAdapterConnection()) {
+            $this->getModelService()->getAdapter()->getAdapterConnection()->generate($this->getRootApplicationFolder());
+        }
+
+        return true;
     }
 
     /**

@@ -18,7 +18,8 @@ class ConfigFactory implements FactoryInterface
         $configService = new Config();
 
         if (!$serviceLocator->has('Matryoshka\Scafolding\Service\Entity') ||
-            !$serviceLocator->has('Matryoshka\Scafolding\Service\Hydrator\Hydrator')) {
+            !$serviceLocator->has('Matryoshka\Scafolding\Service\Hydrator\Hydrator') ||
+            !$serviceLocator->has('Matryoshka\Scafolding\Service\Model\Model')) {
             throw new ServiceNotCreatedException(
                 sprintf(
                     'Services %s and %s must be set in service locator',
@@ -29,6 +30,7 @@ class ConfigFactory implements FactoryInterface
         }
 
         return $configService->setObjectService($serviceLocator->get('Matryoshka\Scafolding\Service\Entity'))
-            ->setHydratorService($serviceLocator->get('Matryoshka\Scafolding\Service\Hydrator\Hydrator'));
+            ->setHydratorService($serviceLocator->get('Matryoshka\Scafolding\Service\Hydrator\Hydrator'))
+            ->setModelService($serviceLocator->get('Matryoshka\Scafolding\Service\Model\Model'));
     }
 } 
