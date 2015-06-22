@@ -60,7 +60,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
                 ]
             ],
             'matryoshka-models' => [
-                'datagateway'        => 'Mongo\DataGateway\Wallet', // FIXME da model service
+                'datagateway'        =>  $this->getModelService()->getAdapter()->getServiceName(),
                 'resultset'          => 'Matryoshka\Model\Wrapper\Mongo\ResultSet\ServiceLocatorStrategyHydratingResultSet', // FIXME da model service
                 'paginator_criteria' => 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria', // FIXME da model service
                 'hydrator'           => $this->getHydratorService()->getFullQualifiedClassName(),
