@@ -47,6 +47,7 @@ class ModuleController extends AbstractConsoleController
 
         $this->getSkeletonService()->setRootPath($path);
         $this->getConfigService()->setModuleName($this->getSkeletonService()->getModuleName());
+        $this->getEntityService()->setName($name);
 
         // Log
         ($verbose) ? $this->infoMessage('Start create skeleton') : '';
@@ -79,7 +80,6 @@ class ModuleController extends AbstractConsoleController
                 'Entity'
             ])
         );
-        $this->getEntityService()->setName($name);
 
         $this->getHydratorService()->setNameSpace(
             Utils::generateNameSpace([
@@ -90,7 +90,7 @@ class ModuleController extends AbstractConsoleController
         );
         $this->getHydratorService()->setName($name);
 
-        $this->getSkeletonService()->generateModuleClass($path);
+        $this->getConfigService()->generateModuleClass($path);
         // Log
         ($verbose) ? $this->infoMessage('Module.php created') : '';
 
@@ -139,6 +139,7 @@ class ModuleController extends AbstractConsoleController
      */
     protected function createSkeletonFolders($path)
     {
+        var_dump($this->getEntityService()->getName());
         $isFoldersSkeletonCreated =
             ($this->configFolder = $this->getSkeletonService()->generateConfigFolder()) &&
             ($this->srcFolder = $this->getSkeletonService()->generateSrcFolder()) &&

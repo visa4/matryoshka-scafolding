@@ -108,7 +108,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
         $file = new FileGenerator();
         $file->setClass($class);
 
-        $path = $this->getRootApplicationFolder() . DIRECTORY_SEPARATOR . "/Module.php";
+        $path = $this->getConfigModuleFolder() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . "Module.php";
         return file_put_contents($path, $file->generate());
     }
 
