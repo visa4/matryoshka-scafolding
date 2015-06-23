@@ -2,7 +2,6 @@
 namespace Matryoshka\Scafolding\Service\Model\Adapter\Connection;
 
 use Matryoshka\Scafolding\Exception\RuntimeException;
-use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Service\ConfigExistingTrait;
 use Matryoshka\Scafolding\Service\Model\Adapter\ServiceNameTrait;
 use Zend\Code\Generator\FileGenerator;

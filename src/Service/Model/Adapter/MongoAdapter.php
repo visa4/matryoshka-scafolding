@@ -3,11 +3,8 @@ namespace Matryoshka\Scafolding\Service\Model\Adapter;
 
 use Matryoshka\Scafolding\Code\Generator\ValueGenerator;
 use Matryoshka\Scafolding\Exception\RuntimeException;
-use Matryoshka\Scafolding\Oop\GeneratorInterface;
-use Matryoshka\Scafolding\Service\Config\Config;
 use Matryoshka\Scafolding\Service\ConfigExistingTrait;
 use Matryoshka\Scafolding\Service\Model\Adapter\Connection\AdapterConnectionAwareTrait;
-use Matryoshka\Scafolding\Service\Model\Adapter\Connection\MongoConnectionAdapter;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Console\Prompt\Char;
 use Zend\Console\Prompt\Line;
@@ -29,6 +26,15 @@ class MongoAdapter implements AdapterInterface, ServiceLocatorAwareInterface
     const CONFIG_KEY = 'mongocollection';
     const CONFIG_KEY_DATABASE = 'database';
     const CONFIG_KEY_COLLECTION = 'collection';
+
+    const DEFAULT_ACTIVE_RECORD_CRITERIA = 'Matryoshka\Model\Wrapper\Mongo\Criteria\ActiveRecord\ActiveRecordCriteria';
+    const DEFAULT_PAGINATOR_CRITERIA = 'Matryoshka\Model\Wrapper\Mongo\ResultSet\HydratingResultSet';
+    const DEFAULT_RESULT_SET = 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria';
+
+    protected $matryoshkaDefaultAbstractFactory = [
+        'Matryoshka\Model\Wrapper\Mongo\Service\MongoDbAbstractServiceFactory',
+        'Matryoshka\Model\Wrapper\Mongo\Service\MongoCollectionAbstractServiceFactory'
+    ];
 
     /**
      * @var string
@@ -135,5 +141,44 @@ class MongoAdapter implements AdapterInterface, ServiceLocatorAwareInterface
         throw new RuntimeException(sprintf('Wrong file config for module adapter %s', $path));
     }
 
+    /**
+     * @return ActiveRecordCriteria
+     */
+    public function getActiveRecordCriteria()
+    {
+        if (!$this->activeRecordCriteria) {
+            $this->activeRecordCriteria = self::DEFAULT_ACTIVE_RECORD_CRITERIA;
+        }
+        return $this->activeRecordCriteria;
+    }
 
+    /**
+     * @return string
+     */
+    public function getResultSet()
+    {
+        if (!$this->resultSet) {
+            $this->resultSet = self::DEFAULT_RESULT_SET;
+        }
+        return $this->resultSet;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaginatorCriteria()
+    {
+        if (!$this->paginatorCriteria) {
+            $this->paginatorCriteria = self::DEFAULT_PAGINATOR_CRITERIA;
+        }
+        return $this->paginatorCriteria;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMatryoshkaDefaultAbstractFactory()
+    {
+        return $this->matryoshkaDefaultAbstractFactory;
+    }
 } 

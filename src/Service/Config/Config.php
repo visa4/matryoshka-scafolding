@@ -1,6 +1,7 @@
 <?php
 namespace Matryoshka\Scafolding\Service\Config;
 
+use Matryoshka\Scafolding\Code\Generator\ValueGenerator;
 use Matryoshka\Scafolding\Service\Hydrator\HydratorAwareTrait;
 use Matryoshka\Scafolding\Service\Model\ModelAwareTrait;
 use Matryoshka\Scafolding\Service\Model\ModelNameAwareTrait;
@@ -9,7 +10,6 @@ use Matryoshka\Scafolding\Service\ObjectInterface;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\FileGenerator;
-use Matryoshka\Scafolding\Code\Generator\ValueGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Filter\StringToLower;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -42,7 +42,7 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
      */
     public function generate()
     {
-        $this->checkMatryoshkaAbstractFactory();
+        $this->checkModuleConfig();
         $this->generateModuleClass();
         $this->generateModelConfig();
     }
@@ -56,14 +56,14 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
             'matryoshka-objects' => [
                 $this->getObjectService()->getFullQualifiedClassName() => [
                     'type' => $this->getObjectService()->getFullQualifiedClassName(),
-                    'active_record_criteria' => 'Solo\Model\Criteria\ActiveRecordCriteria', // FIXME da model service
+                    'active_record_criteria' => $this->getModelService()->getAdapter()->getActiveRecordCriteria()
                 ]
             ],
             'matryoshka-models' => [
                 $this->getObjectService()->getName() => [
-                    'datagateway'        =>  $this->getModelService()->getAdapter()->getServiceName(),
-                    'resultset'          => 'Matryoshka\Model\Wrapper\Mongo\ResultSet\ServiceLocatorStrategyHydratingResultSet', // FIXME da model service
-                    'paginator_criteria' => 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria', // FIXME da model service
+                    'datagateway'        => $this->getModelService()->getAdapter()->getServiceName(),
+                    'resultset'          => $this->getModelService()->getAdapter()->getResultSet(),
+                    'paginator_criteria' => $this->getModelService()->getAdapter()->getPaginatorCriteria(),
                     'hydrator'           => $this->getHydratorService()->getFullQualifiedClassName(),
                     'object'             => $this->getObjectService()->getFullQualifiedClassName(),
                 ]
@@ -160,65 +160,62 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
      * @return $this
      * @throws \Matryoshka\Scafolding\Code\Generator\Exception\RuntimeException
      */
-    public function checkMatryoshkaAbstractFactory()
+    public function checkModuleConfig()
     {
+        $pathModuleConfig = $this->getConfigModuleFolder() . DIRECTORY_SEPARATOR . "module.config.php";
+
+        $oldConfig = is_file($pathModuleConfig) ? include $pathModuleConfig : [];
+        $services = [];
+
+        $adapter = $this->getModelService()->getAdapter();
+        if (!$this->getServiceLocator()->has($adapter->getActiveRecordCriteria()) &&
+            $adapter->getActiveRecordCriteria() == $adapter::DEFAULT_ACTIVE_RECORD_CRITERIA)
+        {
+            $services['service_manager']['invokables'][$adapter->getActiveRecordCriteria()] =
+                $adapter->getActiveRecordCriteria();
+        }
+
+        if (!$this->getServiceLocator()->has($adapter->getPaginatorCriteria()) &&
+            $adapter->getPaginatorCriteria() == $adapter::DEFAULT_PAGINATOR_CRITERIA)
+        {
+            $services['service_manager']['invokables'][$adapter->getPaginatorCriteria()] =
+                $adapter->getPaginatorCriteria();
+        }
+
+        if (!$this->getServiceLocator()->has($adapter->getResultSet()) &&
+            $adapter->getResultSet() == $adapter::DEFAULT_RESULT_SET)
+        {
+            $services['service_manager']['invokables'][$adapter->getResultSet()] =
+                $adapter->getResultSet();
+        }
+
         $config = $this->getServiceLocator()->get('Config');
-        $factories = [
-            'service_manager' => [
-                'abstract_factories' => [
-
-                ]
-            ]
-        ];
         if ($config['service_manager'] && ($config['service_manager']['abstract_factories'])) {
-            $factory = $config['service_manager']['abstract_factories'];
+            $config = $config['service_manager']['abstract_factories'];
+            $oldConfigSM = isset($oldConfig['service_manager']) ? $oldConfig['service_manager'] : [];
+            $oldConfigAbstractSM =  isset($oldConfigSM['abstract_factories']) ? $oldConfigSM['abstract_factories'] : [];
+            foreach ($adapter->getMatryoshkaDefaultAbstractFactory() as $stringFactories) {
 
-            if(!in_array('Matryoshka\Model\Wrapper\Mongo\Service\MongoDbAbstractServiceFactory', $factory)) {
-                $factories['service_manager']['abstract_factories'][] =
-                    'Matryoshka\Model\Wrapper\Mongo\Service\MongoDbAbstractServiceFactory';
-            }
-            if(!in_array('Matryoshka\Model\Wrapper\Mongo\Service\MongoCollectionAbstractServiceFactory', $factory)) {
-                $factories['service_manager']['abstract_factories'][] =
-                    'Matryoshka\Model\Wrapper\Mongo\Service\MongoCollectionAbstractServiceFactory';
-            }
-            if(!in_array('Matryoshka\Service\Api\Service\HttpApiAbstractServiceFactory', $factory)) {
-                $factories['service_manager']['abstract_factories'][] =
-                    'Matryoshka\Service\Api\Service\HttpApiAbstractServiceFactory';
-            }
-            if(!in_array('Matryoshka\Model\Wrapper\Rest\Service\RestClientAbstractServiceFactory', $factory)) {
-                $factories['service_manager']['abstract_factories'][] =
-                    'Matryoshka\Model\Wrapper\Rest\Service\RestClientAbstractServiceFactory';
+                if(!in_array($stringFactories, $config) && !in_array($stringFactories, $oldConfigAbstractSM)) {
+                    $services['service_manager']['abstract_factories'][] = $stringFactories;
+                }
             }
         }
 
-        if (!empty($factories)) {
-            $pathApplicationFolder = $this->getRootApplicationFolder() . "/config/autoload/global.php";
-            $oldGlobalConfig = include $pathApplicationFolder;
-
-            copy($pathApplicationFolder,
-                 $this->getRootApplicationFolder() . sprintf("/config/autoload/global.%s", (new \DateTime())->getTimestamp())
-            );
-
-            $newGlobalConfig = ArrayUtils::merge($oldGlobalConfig, $factories);
-
-
-            $file = new FileGenerator();
-            $file->setFilename("global.php");
-
+        if (!empty($services)) {
+            // Dock block
             $docBlock = new DocBlockGenerator();
             $docBlock->setShortDescription('Test'); // TODO refactor
             $docBlock->setLongDescription('Test test'); // TODO refactor
-
-            $file->setDocBlock($docBlock);
-
+            // Value content
             $valueGenerator = new ValueGenerator();
-            $valueGenerator->setValue($newGlobalConfig);
+            $valueGenerator->setValue(ArrayUtils::merge($oldConfig, $services));
             $valueGenerator->setArrayDepth(0);
-
+            $file = new FileGenerator();
+            $file->setDocBlock($docBlock);
             $file->setBody("return " . $valueGenerator->generate() . ";");
 
-            $path = $this->getRootApplicationFolder() . "/config/autoload/" . $file->getFilename();
-            return file_put_contents($path, $file->generate());
+            file_put_contents($pathModuleConfig, $file->generate());
         }
 
         return $this;

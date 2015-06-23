@@ -19,11 +19,38 @@ interface AdapterInterface extends
     /**
      * @return string
      */
-    public function getConfigGlobalFolder();
+    public function getActiveRecordCriteria();
 
     /**
-     * @param string $configGlobalFolder
+     * @param string $activeRecordCriteria
      * @return $this
      */
-    public function setConfigGlobalFolder($configGlobalFolder);
+    public function setActiveRecordCriteria($activeRecordCriteria);
+
+    /**
+     * @return string
+     */
+    public function getPaginatorCriteria();
+
+    /**
+     * @param string $paginatorCriteria
+     * @return $this
+     */
+    public function setPaginatorCriteria($paginatorCriteria);
+
+    /**
+     * @return string
+     */
+    public function getResultSet();
+
+    /**
+     * @param string $resultSet
+     * @return $this
+     */
+    public function setResultSet($resultSet);
+
+    /**
+     * @return array
+     */
+    public function getMatryoshkaDefaultAbstractFactory();
 } 

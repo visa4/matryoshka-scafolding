@@ -216,4 +216,12 @@ class Object implements ObjectInterface
         $path = $path . '/' . Utils::buildName($this->getName(), ObjectInterface::TRAIT_SUFFIX, true);
         return file_put_contents($path, $file->generate());
     }
+
+    /**
+     * @return string
+     */
+    public function getFullQualifiedClassName()
+    {
+        return $this->getNameSpace() . '\\' . $this->object->getName();
+    }
 } 

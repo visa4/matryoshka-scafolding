@@ -54,5 +54,11 @@ class Hydrator implements HydratorInterface
         return file_put_contents($path, $file->generate());
     }
 
-
+    /**
+     * @return string
+     */
+    public function getFullQualifiedClassName()
+    {
+        return $this->getNameSpace() . '\\' . $this->hydrator->getName();
+    }
 }

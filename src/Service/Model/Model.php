@@ -3,14 +3,7 @@ namespace Matryoshka\Scafolding\Service\Model;
 
 use Matryoshka\Scafolding\Exception\RuntimeException;
 use Matryoshka\Scafolding\Filter\UcFirst;
-use Matryoshka\Scafolding\Oop\GeneratorInterface;
-use Matryoshka\Scafolding\Service\Model\Adapter\AdapterAwareInterface;
 use Matryoshka\Scafolding\Service\Model\Adapter\AdapterAwareTrait;
-use Matryoshka\Scafolding\Service\Model\Adapter\AdapterInterface;
-use Matryoshka\Scafolding\Service\Model\Adapter\MongoAdapter;
-use Matryoshka\Scafolding\Service\PromptSettingInterface;
-use Zend\Console\Prompt\Char;
-use Zend\Console\Prompt\Line;
 use Zend\Console\Prompt\Select;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;

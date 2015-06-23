@@ -1,7 +1,6 @@
 <?php
 namespace Matryoshka\Scafolding\Service\Config;
 
-use Matryoshka\Scafolding\Oop\GeneratorInterface;
 use Matryoshka\Scafolding\Service\Hydrator\HydratorAwareInterface;
 use Matryoshka\Scafolding\Service\Model\ModelAwareInterface;
 use Matryoshka\Scafolding\Service\Model\ModelNameInterface;

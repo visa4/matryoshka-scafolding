@@ -2,11 +2,6 @@
 namespace Matryoshka\Scafolding\Service\Skeleton;
 
 use Matryoshka\Scafolding\Service\Model\ModelNameAwareTrait;
-use Zend\Code\Generator\ClassGenerator;
-use Zend\Code\Generator\DocBlockGenerator;
-use Zend\Code\Generator\FileGenerator;
-use Zend\Code\Generator\MethodGenerator;
-use Zend\Code\Generator\ValueGenerator;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
