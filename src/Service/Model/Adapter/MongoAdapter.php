@@ -28,8 +28,8 @@ class MongoAdapter implements AdapterInterface, ServiceLocatorAwareInterface
     const CONFIG_KEY_COLLECTION = 'collection';
 
     const DEFAULT_ACTIVE_RECORD_CRITERIA = 'Matryoshka\Model\Wrapper\Mongo\Criteria\ActiveRecord\ActiveRecordCriteria';
-    const DEFAULT_PAGINATOR_CRITERIA = 'Matryoshka\Model\Wrapper\Mongo\ResultSet\HydratingResultSet';
-    const DEFAULT_RESULT_SET = 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria';
+    const DEFAULT_PAGINATOR_CRITERIA = 'Matryoshka\Model\Wrapper\Mongo\Criteria\FindAllCriteria';
+    const DEFAULT_RESULT_SET = 'Matryoshka\Model\Wrapper\Mongo\ResultSet\HydratingResultSet';
 
     protected $matryoshkaDefaultAbstractFactory = [
         'Matryoshka\Model\Wrapper\Mongo\Service\MongoDbAbstractServiceFactory',
