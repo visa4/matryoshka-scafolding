@@ -239,6 +239,10 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
                     $services['service_manager']['abstract_factories'][] = $stringFactories;
                 }
             }
+        } else {
+            foreach ($adapter->getMatryoshkaDefaultAbstractFactory() as $stringFactories) {
+                $services['service_manager']['abstract_factories'][] = $stringFactories;
+            }
         }
         return $services;
     }
