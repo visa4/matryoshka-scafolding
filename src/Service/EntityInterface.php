@@ -7,10 +7,4 @@ namespace Matryoshka\Scafolding\Service;
 interface EntityInterface extends ObjectInterface
 {
     const ENTITY_CLASS_SUFFIX = 'Entity';
-
-    /**
-     * @param $path
-     * @return bool
-     */
-    public function existEntityFolder($path);
 } 
