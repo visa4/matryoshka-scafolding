@@ -160,13 +160,42 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
      * @return $this
      * @throws \Matryoshka\Scafolding\Code\Generator\Exception\RuntimeException
      */
-    public function checkModuleConfig()
+    protected function checkModuleConfig()
     {
         $pathModuleConfig = $this->getConfigModuleFolder() . DIRECTORY_SEPARATOR . "module.config.php";
 
         $oldConfig = is_file($pathModuleConfig) ? include $pathModuleConfig : [];
-        $services = [];
 
+        $servicesModelConfig = $this->checkServiceModelConfig();
+        $abstractServiceModelConfig = $this->checkAbstractFactoryModelConfig($oldConfig);
+        $hydratorConfig = $this->checkHydratorConfig();
+        $servicesConfig = ArrayUtils::merge($servicesModelConfig, $abstractServiceModelConfig);
+        $servicesConfig = ArrayUtils::merge($servicesConfig, $hydratorConfig);
+        if (!empty($servicesConfig)) {
+            // Dock block
+            $docBlock = new DocBlockGenerator();
+            $docBlock->setShortDescription('Test'); // TODO refactor
+            $docBlock->setLongDescription('Test test'); // TODO refactor
+            // Value content
+            $valueGenerator = new ValueGenerator();
+            $valueGenerator->setValue(ArrayUtils::merge($oldConfig, $servicesConfig));
+            $valueGenerator->setArrayDepth(0);
+            $file = new FileGenerator();
+            $file->setDocBlock($docBlock);
+            $file->setBody("return " . $valueGenerator->generate() . ";");
+
+            file_put_contents($pathModuleConfig, $file->generate());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function checkServiceModelConfig()
+    {
+        $services = [];
         $adapter = $this->getModelService()->getAdapter();
         if (!$this->getServiceLocator()->has($adapter->getActiveRecordCriteria()) &&
             $adapter->getActiveRecordCriteria() == $adapter::DEFAULT_ACTIVE_RECORD_CRITERIA)
@@ -188,9 +217,19 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
             $services['service_manager']['invokables'][$adapter->getResultSet()] =
                 $adapter->getResultSet();
         }
+        return $services;
+    }
 
+    /**
+     * @param array $oldConfig
+     * @return array
+     */
+    protected  function checkAbstractFactoryModelConfig(array $oldConfig)
+    {
+        $adapter = $this->getModelService()->getAdapter();
+        $services = [];
         $config = $this->getServiceLocator()->get('Config');
-        if ($config['service_manager'] && ($config['service_manager']['abstract_factories'])) {
+        if (isset($config['service_manager']) && (isset($config['service_manager']['abstract_factories']))) {
             $config = $config['service_manager']['abstract_factories'];
             $oldConfigSM = isset($oldConfig['service_manager']) ? $oldConfig['service_manager'] : [];
             $oldConfigAbstractSM =  isset($oldConfigSM['abstract_factories']) ? $oldConfigSM['abstract_factories'] : [];
@@ -201,24 +240,20 @@ class Config implements ConfigInterface, ServiceLocatorAwareInterface
                 }
             }
         }
+        return $services;
+    }
 
-        if (!empty($services)) {
-            // Dock block
-            $docBlock = new DocBlockGenerator();
-            $docBlock->setShortDescription('Test'); // TODO refactor
-            $docBlock->setLongDescription('Test test'); // TODO refactor
-            // Value content
-            $valueGenerator = new ValueGenerator();
-            $valueGenerator->setValue(ArrayUtils::merge($oldConfig, $services));
-            $valueGenerator->setArrayDepth(0);
-            $file = new FileGenerator();
-            $file->setDocBlock($docBlock);
-            $file->setBody("return " . $valueGenerator->generate() . ";");
-
-            file_put_contents($pathModuleConfig, $file->generate());
+    /**
+     * @return array
+     */
+    protected  function checkHydratorConfig()
+    {
+        $hydratorName = $this->getHydratorService()->getFullQualifiedClassName();
+        $hydratorConfig = [];
+        if (!$this->getServiceLocator()->get('HydratorManager')->has($hydratorName)) {
+            $hydratorConfig['HydratorManager'][$hydratorName] = $hydratorName;
         }
-
-        return $this;
+        return $hydratorConfig;
     }
 
     /**
