@@ -109,12 +109,12 @@ class Utils
     static public function generateNameProperty($name)
     {
         // Filters
-        $toUpperWordFilter = new UpperCaseWords();
+        //$toUpperWordFilter = new UpperCaseWords();
         $underscoreFilter = new SeparatorToSeparator(' ', '');
         $lcFirstFilter = new LcFirst();
         // Filter chain
         $filterChain = new FilterChain();
-        $filterChain->attach($toUpperWordFilter);
+        //$filterChain->attach($toUpperWordFilter);
         $filterChain->attach($underscoreFilter);
         $filterChain->attach($lcFirstFilter);
 

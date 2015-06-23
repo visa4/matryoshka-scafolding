@@ -9,6 +9,7 @@ namespace Matryoshka\Scafolding\Service;
 
 use Matryoshka\Scafolding\Oop\Utils;
 use Zend\Code\Generator\DocBlock\Tag;
+use Zend\Code\Generator\MethodGenerator;
 
 /**
  * Trait ObjectTrait
@@ -137,7 +138,11 @@ trait ObjectTrait
     protected function addSetterGetter(array $property)
     {
         $getterSetter = Utils::createSetterGetterFromArray($property);
-        $this->setGetSetMethods($getterSetter);
+        foreach ($getterSetter as $method) {
+            /* @var $method MethodGenerator */
+            $this->getSetMethods[$method->getName()] = $method;
+        }
+
         return $this;
     }
 }
