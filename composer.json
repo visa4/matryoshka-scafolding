@@ -4,11 +4,11 @@
     "homepage": "https://github.com/visa4/matryoshka-scafolding",
     "require": {
         "php": ">=5.5.0",
-        "zendframework/zendframework": "~2.4",
-        "matryoshka-model/matryoshka": "0.7.*@dev",
-        "matryoshka-model/mongo-wrapper": "0.7.*@dev",
-        "matryoshka-model/rest-wrapper": "0.7.*@dev",
-        "matryoshka-model/zf2-matryoshka-module": "0.7.*@dev"
+        "zendframework/zendframework": "~2.3",
+        "matryoshka-model/matryoshka": "0.6.0",
+        "matryoshka-model/mongo-wrapper": "0.6.0",
+        "matryoshka-model/rest-wrapper": "0.6.0",
+        "matryoshka-model/zf2-matryoshka-module": "0.6.0"
 
     },
     "require-dev": {
